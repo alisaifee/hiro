@@ -28,7 +28,7 @@ class TestScaledContext(unittest.TestCase):
             for i in range(0, 10):
                 time.sleep(1)
                 delta = time.time() - (start + (i+1)*100)
-                self.assertTrue(delta <= 1, delta)
+                self.assertTrue(delta <= 1.5, delta)
 
 
 
