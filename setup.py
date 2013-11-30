@@ -24,7 +24,7 @@ setup(
     name='hiro',
     author = __author__,
     author_email = __email__,
-    license = "MIT",
+    license = open("LICENSE").read(),
     url="http://github.com/alisaifee/hiro",
     zip_safe = False,
     include_package_data = True,
