@@ -113,7 +113,8 @@ class Timeline(object):
     def rewind(self, amount):
         offset = self.offset
         if isinstance(amount, datetime.timedelta):
-            offset -= (amount.microseconds + (amount.seconds + amount.days * 24 * 3600) * 10**6) / 10**6
+            offset -= (amount.microseconds + (
+            amount.seconds + amount.days * 24 * 3600) * 10 ** 6) / 10 ** 6
         else:
             offset -= amount
         self.check_out_of_bounds(offset=offset)
@@ -123,14 +124,17 @@ class Timeline(object):
         if at is None:
             freeze_point = self.get_fake("time.time")()
         else:
-            if isinstance(at, (datetime.date, datetime.datetime)):
+            if isinstance(at, (self.get_original("datetime.date"),
+                               self.get_original("datetime.datetime"))):
                 freeze_point = time.mktime(at.timetuple())
             elif isinstance(at, (float, int)):
                 freeze_point = at
             else:
                 raise AttributeError(
-                    "freeze accepts a float/int (time since epoch), datetime or date objects as freeze points. You provided a %s" % (
-                    type(at))
+                    "freeze accepts a float/int (time since epoch), datetime or"
+                    "date objects as freeze points. You provided a %s" % (
+                    type(at)
+                    )
                 )
         self.check_out_of_bounds(freeze_point=freeze_point)
         self.freeze_point = freeze_point
