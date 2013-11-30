@@ -121,7 +121,7 @@ Both functions return a ``ScaledRunner`` object which provides the following met
 * ``get_execution_time``: The actual execution time of the ``callable``
 * ``get_response`` (will either return the actual return value of ``callable`` or raise the exception that was thrown)
 
-``run_async`` additionally provides the following methods
+``run_async`` returns a derived class of ``ScaledRunner`` that additionally provides the following methods
 
 * ``is_running``: ``True/False`` depending on whether the callable has completed execution
 * ``join``: blocks until the ``callable`` completes execution
@@ -144,8 +144,8 @@ Example
 
     runner = hiro.run_sync(10, _slow_function, 10)
     runner.get_response()
-
     # OUT: 10
+    
     # due to the scale factor 10 it only took 1s to execute
     runner.get_execution_time()
     # OUT: 1.1052658557891846
