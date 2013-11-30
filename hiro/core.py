@@ -52,7 +52,7 @@ class Segment(object):
             raise SegmentNotComplete
         else:
             if self.__error:
-                raise self.__error
+                raise self.__error[0], self.__error[1], self.__error[2]
             return self.__response
 
 class Timeline(object):
@@ -209,7 +209,7 @@ class ScaledRunner(object):
             try:
                 self.segment.complete(self.callable(*self.callable_args, **self.callable_kwargs))
             except Exception, e:
-                self.segment.complete_with_error(e)
+                self.segment.complete_with_error(sys.exc_info())
         self.segment.complete_time = time.time()
 
     def __call__(self):
@@ -231,7 +231,7 @@ class ScaledAsyncRunner(ScaledRunner):
         return self
 
     def is_running(self):
-        return self.thread.is_alive
+        return self.thread.is_alive()
 
     def join(self):
         return self.thread.join()

@@ -125,3 +125,39 @@ Both functions return a ``ScaledRunner`` object which provides the following met
 
 * ``is_running``: ``True/False`` depending on whether the callable has completed execution
 * ``join``: blocks until the ``callable`` completes execution
+
+
+Example
+=======
+
+.. code-block:: python
+
+
+    import hiro
+    import time
+
+    def _slow_function(n):
+        time.sleep(n)
+        if n > 10:
+            raise RuntimeError()
+        return n
+
+    runner = hiro.run_sync(10, _slow_function, 10)
+    runner.get_response()
+
+    # OUT: 10
+    # due to the scale factor 10 it only took 1s to execute
+    runner.get_execution_time()
+    # OUT: 1.1052658557891846
+
+    runner = hiro.run_async(10, _slow_function, 11)
+    runner.is_running()
+    # OUT: True
+    runner.join()
+    runner.get_execution_time()
+    # OUT: 1.1052658557891846
+    runner.get_response()
+    # OUT: Traceback (most recent call last):
+    # ....
+    # OUT:   File "<input>", line 4, in _slow_function
+    # OUT: RuntimeError
