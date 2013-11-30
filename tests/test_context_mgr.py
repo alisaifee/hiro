@@ -36,8 +36,8 @@ class TestScaledContext(unittest.TestCase):
         start_utc = datetime.utcnow()
         with ScaledTimeline(50000):
             time.sleep(60*60)
-            self.assertEquals( (datetime.now() - datetime.utcnow()).seconds / 60,
-                               (start_local - start_utc).seconds / 60)
+            self.assertEquals( int((datetime.now() - datetime.utcnow()).seconds / 60),
+                               int((start_local - start_utc).seconds / 60))
             time.sleep(60*60*23)
             self.assertEquals( (datetime.now() - start_local).days, 1 )
             self.assertEquals( (datetime.utcnow() - start_utc).days, 1 )
