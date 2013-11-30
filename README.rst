@@ -93,6 +93,22 @@ with the one exception that it can be initialized with a default scale ``factor`
           # OUT: '2013-12-01'
 
 
+``ScaledTimeline`` can additionally be used as a decorator
+
+.. code-block:: python
+
+    import hiro
+    import time, datetime
+
+    @hiro.ScaledTimeline(50000)
+    def sleeper():
+        datetime.datetime.now()
+        # OUT: '2013-11-30 14:27:43.409291'
+        time.sleep(60*60) # effectively 72 ms
+        datetime.datetime.now()
+        # OUT: '2013-11-30 15:28:36.240675'
+
+
 ==============
 Hiro executors
 ==============

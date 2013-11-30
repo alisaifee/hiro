@@ -5,6 +5,7 @@ import sys
 import threading
 import time
 import datetime
+import contextdecorator
 import mock
 from .errors import SegmentNotComplete, TimeOutofBounds
 from .patches import Date, Datetime
@@ -184,7 +185,7 @@ class Timeline(object):
             patcher.stop()
         self.patchers = []
 
-class ScaledTimeline(Timeline):
+class ScaledTimeline(Timeline, contextdecorator.ContextDecorator):
     def __init__(self, factor=1, segment=None):
         self.segment = segment
         super(ScaledTimeline, self).__init__()
