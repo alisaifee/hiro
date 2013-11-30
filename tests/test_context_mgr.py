@@ -1,3 +1,4 @@
+import os
 import unittest
 import time
 from datetime import datetime, date, timedelta
@@ -83,11 +84,18 @@ class TestTimelineContext(unittest.TestCase):
             self.assertRaises(AttributeError, timeline.freeze, date(1969,1,1))
 
     def test_unfreeze(self):
-        start = time.time()
+        real_day = date.today()
         with Timeline() as timeline:
             timeline.freeze(0)
             self.assertAlmostEquals(time.time(), 0)
             timeline.unfreeze()
             timeline.scale(10)
-            self.assertTrue(time.time() - start > 0, time.time() - start)
+            time.sleep(1)
+            self.assertAlmostEquals(time.time(), 1.0, 1)
+            timeline.forward(timedelta(minutes=2))
+            self.assertAlmostEquals(time.time(), 121.0, 1)
+            timeline.reset()
+            self.assertEquals(int(time.time()), int(os.popen("date +%s").read().strip()))
+            timeline.forward(timedelta(days=1))
+            self.assertTrue((date.today() - real_day).days == 1)
 

@@ -61,7 +61,8 @@ class Timeline(object):
         self.reference_clock = time.clock()
         self.factor = 1
         self.offset = 0.0
-        self.freeze_point = None
+        self.freeze_point = self.freeze_at = None
+        self.freeze_offset = 0
         self.patchers = []
         self.mock_mappings = {
             "datetime.date": (datetime.date, Date),
@@ -87,7 +88,7 @@ class Timeline(object):
             return (offset * self.factor) + freeze_point
         else:
             delta = self.get_original("time.time")() - self.reference
-            return self.reference + (delta * self.factor) + (offset * self.factor)
+            return self.reference + (delta * self.factor) + offset  - self.freeze_offset
 
     def check_out_of_bounds(self, offset=None, freeze_point=None):
         next_time = self.compute_time(freeze_point or self.freeze_point, offset or self.offset)
@@ -138,12 +139,25 @@ class Timeline(object):
                 )
         self.check_out_of_bounds(freeze_point=freeze_point)
         self.freeze_point = freeze_point
+        self.freeze_at = self.get_original("time.time")()
 
     def unfreeze(self):
-        self.freeze_point = None
+        if self.freeze_point is not None:
+            self.freeze_offset =  self.reference - self.freeze_point
+            self.reference = self.freeze_at
+            self.freeze_at = None
+            self.freeze_point = None
+
 
     def scale(self, factor):
         self.factor = factor
+
+    def reset(self):
+        self.factor = 1
+        self.freeze_offset = 0
+        self.freeze_point = None
+        self.reference = self.get_original("time.time")()
+        self.offset = 0
 
     def __enter__(self):
         for name, module in sys.modules.items():
@@ -167,7 +181,7 @@ class Timeline(object):
         self.patchers = []
 
 class ScaledTimeline(Timeline):
-    def __init__(self, factor, segment):
+    def __init__(self, factor=1, segment=None):
         self.segment = segment
         super(ScaledTimeline, self).__init__()
         self.factor = factor
@@ -202,11 +216,11 @@ class ScaledRunner(object):
         self.run()
         return self
 
-    def response(self):
+    def get_response(self):
         return self.segment.response
 
 
-    def real_execution_time(self):
+    def get_execution_time(self):
         return self.segment.runtime
 
 
