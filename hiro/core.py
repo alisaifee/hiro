@@ -58,7 +58,7 @@ class Segment(object):
 class Timeline(object):
     def __init__(self):
         self.reference = time.time()
-        self.reference_clock = time.clock()
+        self.reference_gmtime = time.mktime(time.gmtime())
         self.factor = 1
         self.offset = 0.0
         self.freeze_point = self.freeze_at = None
@@ -68,7 +68,8 @@ class Timeline(object):
             "datetime.date": (datetime.date, Date),
             "datetime.datetime": (datetime.datetime, Datetime),
             "time.time": (time.time, self.time_time),
-            "time.sleep": (time.sleep, self.time_sleep)
+            "time.sleep": (time.sleep, self.time_sleep),
+            "time.gmtime": (time.gmtime, self.time_gmtime)
         }
         self.class_mappings = {
             "date": (datetime.date, Date),
@@ -97,6 +98,9 @@ class Timeline(object):
 
     def time_time(self):
         return self.compute_time(self.freeze_point, self.offset)
+
+    def time_gmtime(self, seconds=None):
+        return self.get_original("time.gmtime")(seconds or self.time_time())
 
     def time_sleep(self, amount):
         self.get_original("time.sleep")(1.0 * amount / self.factor)

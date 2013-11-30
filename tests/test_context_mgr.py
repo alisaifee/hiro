@@ -31,6 +31,18 @@ class TestScaledContext(unittest.TestCase):
                 delta = time.time() - (start + (i+1)*100)
                 self.assertTrue(delta <= 1.5, delta)
 
+    def test_utc(self):
+        start_local = datetime.now()
+        start_utc = datetime.utcnow()
+        with ScaledTimeline(50000):
+            time.sleep(60*60)
+            self.assertEquals( (datetime.now() - datetime.utcnow()).seconds / 60,
+                               (start_local - start_utc).seconds / 60)
+            print "pre"
+            time.sleep(60*60*23)
+            print "post"
+            self.assertEquals( (datetime.now() - start_local).days, 1 )
+            self.assertEquals( (datetime.utcnow() - start_utc).days, 1 )
 
 
 class TestTimelineContext(unittest.TestCase):

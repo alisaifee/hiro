@@ -16,7 +16,7 @@ Timeline context
 ================
 The ``hiro.Timeline`` context manager hijacks a few commonly used time functions
 to allow time manipulation within its context. Specifically ``time.sleep``, ``time.time``,
-``datetime.now`` and ``datetime.today`` behave according the configuration of the context.
+``time.gmtime``, ``datetime.now``, ``datetime.utcnow`` and ``datetime.today`` behave according the configuration of the context.
 
 The context provides the following manipulation options:
 
