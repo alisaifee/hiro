@@ -27,7 +27,8 @@ class TestScaledContext(unittest.TestCase):
             last = time.time()
             for i in range(0, 10):
                 time.sleep(1)
-                self.assertAlmostEquals(time.time(), start + ((i+1)*100), delta=1.5)
+                delta = time.time() - (start + (i+1)*100)
+                self.assertLessEqual(delta, 1, delta)
 
 
 

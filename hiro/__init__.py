@@ -2,7 +2,7 @@
 
 """
 import functools
-from hiro.core import ScaledAsyncRunner, ScaledRunner, ScaledTimeline, Timeline
+from .core import ScaledAsyncRunner, ScaledRunner, ScaledTimeline, Timeline
 
 
 # module exports

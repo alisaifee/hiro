@@ -117,7 +117,7 @@ class Timeline(object):
     def rewind(self, amount):
         offset = self.offset
         if isinstance(amount, datetime.timedelta):
-            offset -= amount.total_seconds()
+            offset -= (amount.microseconds + (amount.seconds + amount.days * 24 * 3600) * 10**6) / 10**6
         else:
             offset -= amount
         self.check_out_of_bounds(offset=offset)
