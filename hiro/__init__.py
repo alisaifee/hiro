@@ -1,6 +1,3 @@
-"""
-
-"""
 import functools
 from .core import ScaledAsyncRunner, ScaledRunner, ScaledTimeline, Timeline
 

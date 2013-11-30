@@ -90,6 +90,4 @@ class TestTimelineContext(unittest.TestCase):
             timeline.unfreeze()
             timeline.scale(10)
             self.assertTrue(time.time() - start > 0, time.time() - start)
-            time.sleep(1)
-            self.assertTrue(time.time() - start > 10, time.time() - start)
 

@@ -98,11 +98,7 @@ class Timeline(object):
         return self.compute_time(self.freeze_point, self.offset)
 
     def time_sleep(self, amount):
-        s = self.get_original("time.time")()
         self.get_original("time.sleep")(1.0 * amount / self.factor)
-        e = self.get_original("time.time")()
-        if not self.freeze_point:
-            self.forward(1.0 * amount - (e - s))
 
 
     def forward(self, amount):

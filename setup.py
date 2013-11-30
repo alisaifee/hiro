@@ -10,12 +10,15 @@ __copyright__ = "Copyright 2013, Ali-Akber Saifee"
 from setuptools import setup
 import os
 import sys
-import hiro.version
+import re
+
 this_dir = os.path.abspath(os.path.dirname(__file__))
 REQUIREMENTS = filter(None, open(os.path.join(this_dir, 'requirements.txt')).read().splitlines())
 extra = {}
 if sys.version_info >= (3,):
     extra['use_2to3'] = True
+version = re.compile("__version__\s*=\s*\"(.*?)\"$").findall(open("hiro/version.py").read())[0]
+
 
 
 setup(
@@ -25,8 +28,8 @@ setup(
     license = "MIT",
     url="https://hiro.readthedocs.org/en/latest/",
     zip_safe = False,
-    version=hiro.version.__version__,
     include_package_data = True,
+    version = version,
     install_requires = REQUIREMENTS,
     classifiers=[k for k in open('CLASSIFIERS').read().split('\n') if k],
     description='selenium page objects and other utilities for test creation',
