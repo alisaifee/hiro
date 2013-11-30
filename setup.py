@@ -26,7 +26,7 @@ setup(
     author = __author__,
     author_email = __email__,
     license = "MIT",
-    url="https://hiro.readthedocs.org/en/latest/",
+    url="http://github.com/alisaifee/hiro",
     zip_safe = False,
     include_package_data = True,
     version = version,

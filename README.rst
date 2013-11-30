@@ -7,19 +7,6 @@ Hiro - time manipulation utilities for python
 .. image:: https://coveralls.io/repos/alisaifee/hiro/badge.png?branch=master
     :target: https://coveralls.io/r/alisaifee/hiro?branch=master
 
-
-.. figure:: http://d2tq98mqfjyz2l.cloudfront.net/image_cache/1335749604395082.jpg
-   :alt: Hiro Nakamura
-   :width: 320
-
-
-.. epigraph::
-
-   Yatta!
-
-   -- Hiro Nakamura
-
-
 =====================
 Hiro context managers
 =====================
@@ -161,3 +148,16 @@ Example
     # ....
     # OUT:   File "<input>", line 4, in _slow_function
     # OUT: RuntimeError
+
+
+
+.. figure:: http://d2tq98mqfjyz2l.cloudfront.net/image_cache/1335749604395082.jpg
+   :alt: Hiro Nakamura
+   :align: center
+
+
+   Yatta!
+
+   -- Hiro Nakamura
+
+
