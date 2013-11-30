@@ -1,4 +1,3 @@
-from decimal import Decimal
 import unittest
 import time
 from datetime import datetime, date, timedelta
@@ -25,7 +24,7 @@ class TestScaledContext(unittest.TestCase):
     def test_check_time(self):
         start = time.time()
         with ScaledTimeline(100, None):
-            last = Decimal(time.time())
+            last = time.time()
             for i in range(0, 10):
                 time.sleep(1)
                 self.assertAlmostEquals(time.time(), start + ((i+1)*100), delta=1.5)
