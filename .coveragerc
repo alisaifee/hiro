@@ -1,0 +1,11 @@
+[run]
+include = 
+    **/hiro/**
+omit = 
+    **/hiro/tests/**
+    **/setup.py
+debug = trace
+[report]
+exclude_lines =
+    pragma: no cover
+    raise NotImplementedError
