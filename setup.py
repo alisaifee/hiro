@@ -17,7 +17,7 @@ REQUIREMENTS = filter(None, open(os.path.join(this_dir, 'requirements.txt')).rea
 extra = {}
 if sys.version_info >= (3,):
     extra['use_2to3'] = True
-version = re.compile("__version__\s*=\s*\"(.*?)\"$").findall(open("hiro/version.py").read())[0]
+version = re.compile("__version__\s*=\s*\"(.*?)\"").findall(open("hiro/version.py").read())[0]
 
 
 
