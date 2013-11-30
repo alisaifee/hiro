@@ -7,7 +7,7 @@ __author__ = "Ali-Akber Saifee"
 __email__ = "ali@indydevs.org.com"
 __copyright__ = "Copyright 2013, Ali-Akber Saifee"
 
-from setuptools import setup, find_packages
+from setuptools import setup
 import os
 import sys
 import hiro.version
@@ -31,7 +31,7 @@ setup(
     classifiers=[k for k in open('CLASSIFIERS').read().split('\n') if k],
     description='selenium page objects and other utilities for test creation',
     long_description=open('README.rst').read(),
-    packages = find_packages(),
+    packages = ["hiro"],
     **extra
 )
 
