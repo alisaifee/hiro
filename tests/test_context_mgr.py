@@ -38,9 +38,7 @@ class TestScaledContext(unittest.TestCase):
             time.sleep(60*60)
             self.assertEquals( (datetime.now() - datetime.utcnow()).seconds / 60,
                                (start_local - start_utc).seconds / 60)
-            print "pre"
             time.sleep(60*60*23)
-            print "post"
             self.assertEquals( (datetime.now() - start_local).days, 1 )
             self.assertEquals( (datetime.utcnow() - start_utc).days, 1 )
 
