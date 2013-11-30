@@ -59,7 +59,6 @@ class Segment(object):
 class Timeline(object):
     def __init__(self):
         self.reference = time.time()
-        self.reference_gmtime = time.mktime(time.gmtime())
         self.factor = 1
         self.offset = 0.0
         self.freeze_point = self.freeze_at = None
@@ -87,7 +86,7 @@ class Timeline(object):
 
     def compute_time(self, freeze_point, offset):
         if not freeze_point is None:
-            return (offset * self.factor) + freeze_point
+            return offset + freeze_point
         else:
             delta = self.get_original("time.time")() - self.reference
             return self.reference + (delta * self.factor) + offset  - self.freeze_offset
@@ -156,6 +155,8 @@ class Timeline(object):
 
     def scale(self, factor):
         self.factor = factor
+        self.reference = self.get_original("time.time")()
+
 
     def reset(self):
         self.factor = 1

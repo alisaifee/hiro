@@ -29,40 +29,40 @@ The context provides the following manipulation options:
 
 .. code-block:: python
 
-  import hiro
-  from datetime import timedelta, datetime
-  import time
+    import hiro
+    from datetime import timedelta, datetime
+    import time
 
-  datetime.now().isoformat()
-  # OUT: '2013-11-30T10:45:09.583797'
-  with hiro.Timeline() as timeline:
+    datetime.now().isoformat()
+    # OUT: '2013-12-01T06:55:41.706060'
+    with hiro.Timeline() as timeline:
 
-      # forward by an hour
-      timeline.forward(60*60)
-      datetime.now().isoformat()
-      # OUT: '2013-11-30T11:45:09.585100'
+        # forward by an hour
+        timeline.forward(60*60)
+        datetime.now().isoformat()
+        # OUT: '2013-12-01T07:55:41.707383'
 
-      # jump forward by 10 minutes
-      timeline.forward(timedelta(minutes=10))
-      datetime.now().isoformat()
-      # OUT: '2013-11-30T11:55:09.585115'
+        # jump forward by 10 minutes
+        timeline.forward(timedelta(minutes=10))
+        datetime.now().isoformat()
+        # OUT: '2013-12-01T08:05:41.707425'
 
-      # jump to yesterday and freeze forward/reverse
-      timeline.freeze(datetime.now() - timedelta(days=-1))
-      datetime.now().isoformat()
-      # OUT: '2013-12-01T13:05:09'
+        # jump to yesterday and freeze
+        timeline.freeze(datetime.now() - timedelta(hours=24))
+        datetime.now().isoformat()
+        # OUT: '2013-11-30T09:15:41'
 
-      timeline.scale(5) # scale time by 5x
-      time.sleep(5) # this will effectively only sleep for 1 second
+        timeline.scale(5) # scale time by 5x
+        time.sleep(5) # this will effectively only sleep for 1 second
 
-      datetime.now().isoformat()
-      # OUT: '2013-12-01T13:05:09'
+        # since time is frozen the sleep has no effect
+        datetime.now().isoformat()
+        # OUT: '2013-11-30T09:15:41'
 
-      timeline.reverse(timedelta(year=1))
+        timeline.rewind(timedelta(days=365))
 
-      print datetime.now().isoformat()
-      # OUT: '2013-12-01T13:05:09'
-
+        datetime.now().isoformat()
+        # OUT: '2012-11-30T09:15:41'
 
 Scaled Timeline Context
 =======================
@@ -75,22 +75,30 @@ with the one exception that it can be initialized with a default scale ``factor`
       from datetime import timedelta, datetime, date
       import time
 
-      # all time operations will occur at 50000x
-      with hiro.ScaledTimeline(factor=50000):
+      # all time operations will occur at 10000x
+      with hiro.ScaledTimeline(factor=10000) as timeline:
           datetime.now().isoformat()
-          # OUT: '2013-11-30T12:37:56.051953'
+          # OUT: '2013-12-01T06:49:33.777745'
 
           # sleep for an hour
-          time.sleep(60*60) # effectively 72 ms
+          time.sleep(60*60) # effectively 360 ms
 
           datetime.now().isoformat()
-          # OUT: '2013-11-30T13:38:32.447884'
+          # OUT: '2013-12-01T07:49:47.097142'
+
+          # accelerate further
+          timeline.scale(50000)
 
           # sleep for a day
           time.sleep(60*60*24) # effectively 1.7 seconds
 
+          datetime.now().isoformat()
+          # OUT: '2013-12-02T06:50:06.726242'
+          datetime.utcnow().isoformat()
+          # OUT: '2013-12-01T22:50:13'
           date.today().isoformat()
-          # OUT: '2013-12-01'
+          # OUT: '2013-12-02'
+
 
 
 ``ScaledTimeline`` can additionally be used as a decorator
