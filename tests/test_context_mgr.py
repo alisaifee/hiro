@@ -28,7 +28,7 @@ class TestScaledContext(unittest.TestCase):
             for i in range(0, 10):
                 time.sleep(1)
                 delta = time.time() - (start + (i+1)*100)
-                self.assertLessEqual(delta, 1, delta)
+                self.assertTrue(delta <= 1, delta)
 
 
 
@@ -48,7 +48,9 @@ class TestTimelineContext(unittest.TestCase):
             timeline.forward(timedelta(days=1))
             self.assertEquals( (original_day - date.today()).days, 0)
             timeline.rewind(timedelta(days=1))
-            self.assertAlmostEquals( (original_datetime - datetime.now()).total_seconds(), 86400, 1)
+            amount = (original_datetime - datetime.now())
+            amount_seconds = float(amount.microseconds + (amount.seconds + amount.days * 24 * 3600) * 10**6) / 10**6
+            self.assertAlmostEquals( amount_seconds, 86400, 1 )
 
     def test_freeze(self):
         with Timeline() as timeline:
