@@ -1,6 +1,5 @@
 """
-setup.py for holmium.core
-
+setup.py for hiro
 
 """
 __author__ = "Ali-Akber Saifee"
@@ -32,7 +31,7 @@ setup(
     version = version,
     install_requires = REQUIREMENTS,
     classifiers=[k for k in open('CLASSIFIERS').read().split('\n') if k],
-    description='selenium page objects and other utilities for test creation',
+    description='time manipulation utilities for python',
     long_description=open('README.rst').read(),
     packages = ["hiro"],
     **extra
