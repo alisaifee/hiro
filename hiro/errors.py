@@ -1,5 +1,5 @@
 """
-
+exceptions used by hiro.
 """
 
 
@@ -15,7 +15,8 @@ class TimeOutofBounds(AttributeError):
     used to raise an exception when time is rewound beyond the epoch
     """
     def __init__(self, oob_time):
-        message = "you've frozen time at a point before the epoch (%d).. hiro can't compute" % oob_time
+        message = ("you've frozen time at a point before the epoch (%d)."
+        "hiro only supports going back to 1970/01/01 07:30:00" % oob_time)
         super(TimeOutofBounds, self).__init__(message)
 
 

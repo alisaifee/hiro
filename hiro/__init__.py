@@ -1,9 +1,9 @@
-import functools
-from .core import ScaledAsyncRunner, ScaledRunner, ScaledTimeline, Timeline
+"""
+time manipulation utilities for python
+"""
 
+from .core import run_async, run_sync
+from .core import ScaledTimeline, Timeline
 
-# module exports
-run_sync = ScaledRunner
-run_async = ScaledAsyncRunner
-scaled_timeline = functools.partial(ScaledTimeline, segment=None)
+__all__ = ["run_async", "run_sync", "Timeline", "ScaledTimeline"]
 
