@@ -6,7 +6,11 @@ import sys
 import threading
 import time
 import datetime
-import contextdecorator
+if sys.version_info >= (3,0,0):
+    from contextlib import ContextDecorator #pragma: no cover
+else:
+    from contextdecorator import ContextDecorator #pragma: no cover
+
 import mock
 from .errors import SegmentNotComplete, TimeOutofBounds
 from .utils import timedelta_to_seconds
@@ -297,7 +301,7 @@ class Timeline(object):
         self.patchers = []
 
 
-class ScaledTimeline(Timeline, contextdecorator.ContextDecorator):
+class ScaledTimeline(Timeline, ContextDecorator):
     """
     extension of :class:`Timeline` that accepts a scale factor
     at initialization. Additionally the class can also be used
