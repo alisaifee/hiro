@@ -16,5 +16,6 @@ API Documentation
 
 .. autoclass:: ScaledAsyncRunner
     :members:
+    :inherited-members:
 
 
