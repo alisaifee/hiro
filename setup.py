@@ -25,7 +25,7 @@ setup(
     author = __author__,
     author_email = __email__,
     license = open("LICENSE").read(),
-    url="http://github.com/alisaifee/hiro",
+    url="http://hiro.readthedocs.org",
     zip_safe = False,
     include_package_data = True,
     version = version,
