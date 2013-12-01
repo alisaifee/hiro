@@ -332,7 +332,7 @@ class ScaledRunner(object):
         self.factor = factor
         self.__call__()
 
-    def run(self):
+    def _run(self):
         """
         managed execution of :attr:`func`
         """
@@ -345,7 +345,7 @@ class ScaledRunner(object):
         self.segment.complete_time = time.time()
 
     def __call__(self):
-        self.run()
+        self._run()
         return self
 
     def get_response(self):
@@ -369,7 +369,7 @@ class ScaledAsyncRunner(ScaledRunner):
     :class:`hiro.Timeline` context.
     """
     def __init__(self, *args, **kwargs):
-        self.thread_runner = threading.Thread(target=self.run)
+        self.thread_runner = threading.Thread(target=self._run)
         super(ScaledAsyncRunner, self).__init__(*args, **kwargs)
 
     def __call__(self):
