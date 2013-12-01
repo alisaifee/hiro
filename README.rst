@@ -1,13 +1,15 @@
+.. |travis| image:: https://travis-ci.org/alisaifee/hiro.png?branch=master
+    :target: https://travis-ci.org/alisaifee/hiro
+.. |coveralls| image:: https://coveralls.io/repos/alisaifee/hiro/badge.png?branch=master
+    :target: https://coveralls.io/r/alisaifee/hiro?branch=master
+.. |pypi| image:: https://pypip.in/v/hiro/badge.png
+    :target: https://crate.io/packages/hiro/
+
+
 *********************************************
 Hiro - time manipulation utilities for python
 *********************************************
-
-.. image:: https://travis-ci.org/alisaifee/hiro.png?branch=master
-    :target: https://travis-ci.org/alisaifee/hiro
-.. image:: https://coveralls.io/repos/alisaifee/hiro/badge.png?branch=master
-    :target: https://coveralls.io/r/alisaifee/hiro?branch=master
-
-.. epigraph::
+|travis| |coveralls| |pypi|
 
    Yatta!
 
