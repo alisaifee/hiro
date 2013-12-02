@@ -337,10 +337,11 @@ class ScaledTimeline(Timeline):
     as a decorator on a class or function to alter the time factor
     for the class or function's scope.
 
-    .. deprecated:: 1.0
+    .. warning::
 
         The class is just an alias to :class:`Timeline` and has been
-        left as the library was released with it. Use :class:`Timeline` instead.
+        kept around as the library was released with it.
+        Please use :class:`Timeline` instead, as it could be removed arbitrarily.
 
     """
     pass

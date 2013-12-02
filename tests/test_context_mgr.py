@@ -148,7 +148,7 @@ class TestTimelineContext(unittest.TestCase):
         self.assertAlmostEqual((datetime.now() - start).seconds, 1, 2)
 
     def test_decorated(self):
-        start = datetime(2013,01,01,0,0,0)
+        start = datetime(2013,1,1,0,0,0)
         real_start = datetime.now()
         @Timeline(scale=10, start=start)
         def _decorated():
