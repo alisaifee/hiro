@@ -5,6 +5,7 @@ from datetime import datetime, date, timedelta
 
 from hiro import Timeline
 from hiro.core import ScaledTimeline
+from hiro.utils import timedelta_to_seconds
 from tests.emulated_modules import sample_1, sample_2
 
 
@@ -12,19 +13,19 @@ class TestScaledContext(unittest.TestCase):
 
     def test_accelerate(self):
         s = time.time()
-        with ScaledTimeline(100,None):
+        with ScaledTimeline(100):
             time.sleep(10)
         self.assertAlmostEquals(time.time() - s, 0.1, 1)
 
     def test_deccelerate(self):
         s = time.time()
-        with ScaledTimeline(0.5,None):
+        with ScaledTimeline(0.5):
             time.sleep(0.25)
         self.assertAlmostEquals(time.time() - s, 0.5, 1)
 
     def test_check_time(self):
         start = time.time()
-        with ScaledTimeline(100, None):
+        with ScaledTimeline(100):
             last = time.time()
             for i in range(0, 10):
                 time.sleep(1)
@@ -87,7 +88,7 @@ class TestTimelineContext(unittest.TestCase):
             self.assertAlmostEquals(time.time(), 0, 1)
 
         with Timeline() as timeline:
-            self.assertRaises(AttributeError, timeline.freeze, "now")
+            self.assertRaises(TypeError, timeline.freeze, "now")
 
         with Timeline() as timeline:
             self.assertRaises(AttributeError, timeline.freeze, -1)
@@ -109,3 +110,49 @@ class TestTimelineContext(unittest.TestCase):
             timeline.forward(timedelta(days=1))
             self.assertTrue((date.today() - real_day).days == 1)
 
+    def test_freeze_forward_unfreeze(self):
+
+        # start at 2012/12/12 0:0:0
+        test_timeline = Timeline(scale=100, start=datetime(2012,12,12,0,0,0))
+
+        # jump forward an hour and freeze
+        with test_timeline.forward(60*60).freeze():
+            self.assertAlmostEqual((datetime.now() - datetime(2012,12,12,1,0,0)).seconds, 0)
+            # sleep 10 seconds
+            time.sleep(10)
+            # assert no changes
+            self.assertAlmostEqual((datetime.now() - datetime(2012,12,12,1,0,0)).seconds, 0)
+            # unfreeze timeline
+            test_timeline.unfreeze()
+            # ensure unfreeze was at the original freeze point
+            self.assertAlmostEqual((datetime.now() - datetime(2012,12,12,1,0,0)).seconds, 0)
+            # sleep 10 seconds
+            time.sleep(10)
+            # ensure post unfreeze, time moves
+            self.assertAlmostEqual((datetime.now() - datetime(2012,12,12,1,0,0)).seconds, 10)
+            # ensure post unfreeze, forward operations work
+            test_timeline.forward(timedelta(hours=2))
+            self.assertAlmostEqual(timedelta_to_seconds(datetime.now() - datetime(2012,12,12,1,0,0)), 60*60*2 + 10)
+            # reset everything
+            test_timeline.reset()
+            self.assertEquals(int(time.time()), int(os.popen("date +%s").read().strip()))
+
+
+
+    def test_fluent(self):
+        start = datetime.now()
+        with Timeline().scale(10).forward(120):
+            self.assertEquals(timedelta_to_seconds(datetime.now() - start), 120)
+            time.sleep(10)
+            self.assertEquals(timedelta_to_seconds(datetime.now() - start), 130)
+        self.assertAlmostEqual((datetime.now() - start).seconds, 1, 2)
+
+    def test_decorated(self):
+        start = datetime(2013,01,01,0,0,0)
+        real_start = datetime.now()
+        @Timeline(scale=10, start=start)
+        def _decorated():
+            time.sleep(10)
+            self.assertEquals(timedelta_to_seconds(datetime.now() - start), 10)
+        _decorated()
+        self.assertAlmostEqual((datetime.now() - real_start).seconds, 1, 2)

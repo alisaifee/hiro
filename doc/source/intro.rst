@@ -1,6 +1,6 @@
-***********************************
-Hiro context managers and functions
-***********************************
+**********************************
+Hiro context manager and utilities
+**********************************
 
 Timeline context
 ================
@@ -55,58 +55,37 @@ The context provides the following manipulation options:
         datetime.now().isoformat()
         # OUT: '2012-11-30T09:15:41'
 
-Scaled Timeline Context
-=======================
-The :class:`hiro.ScaledTimeline` context behaves identically to the :class:`hiro.Timeline` context
-with the one exception that it can be initialized with a default scale ``factor``
+
+
+To reduce the amount of statements inside the context, certain timeline setup
+tasks can be done via the constructor and/or by using the fluent interface.
+
 
 .. code-block:: python
 
-      import hiro
-      from datetime import timedelta, datetime, date
-      import time
+    import hiro
+    from datetime import timedelta, datetime
 
-      # all time operations will occur at 10000x
-      with hiro.ScaledTimeline(factor=10000) as timeline:
-          datetime.now().isoformat()
-          # OUT: '2013-12-01T06:49:33.777745'
-
-          # sleep for an hour
-          time.sleep(60*60) # effectively 360 ms
-
-          datetime.now().isoformat()
-          # OUT: '2013-12-01T07:49:47.097142'
-
-          # accelerate further
-          timeline.scale(50000)
-
-          # sleep for a day
-          time.sleep(60*60*24) # effectively 1.7 seconds
-
-          datetime.now().isoformat()
-          # OUT: '2013-12-02T06:50:06.726242'
-          datetime.utcnow().isoformat()
-          # OUT: '2013-12-01T22:50:13'
-          date.today().isoformat()
-          # OUT: '2013-12-02'
+    freeze_point = datetime.now() - timedelta(hours=24)
+    my_timeline = hiro.Timeline(scale=5).forward(60*60).freeze(freeze_point)
+    with my_timeline as timeline:
+        ....
 
 
-
-:class:`hiro.ScaledTimeline` can additionally be used as a decorator
+:class:`hiro.Timeline` can additionally be used as a decorator
 
 .. code-block:: python
 
     import hiro
     import time, datetime
 
-    @hiro.ScaledTimeline(50000)
+    @hiro.Timeline(scale=50000)
     def sleeper():
         datetime.datetime.now()
         # OUT: '2013-11-30 14:27:43.409291'
         time.sleep(60*60) # effectively 72 ms
         datetime.datetime.now()
         # OUT: '2013-11-30 15:28:36.240675'
-
 
 
 run_sync and run_async

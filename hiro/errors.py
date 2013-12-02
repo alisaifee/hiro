@@ -19,5 +19,15 @@ class TimeOutofBounds(AttributeError):
         "hiro only supports going back to 1970/01/01 07:30:00" % oob_time)
         super(TimeOutofBounds, self).__init__(message)
 
+class InvalidTypeError(TypeError):
+    """
+    used to raise an exception when an invalid type is provided
+    for type operations
+    """
+    def __init__(self, value):
+        message = ("%s provided when only float, int, datetime, or date objects"
+                   "are supported" % type(value))
+        super(InvalidTypeError, self).__init__(message)
+
 
 

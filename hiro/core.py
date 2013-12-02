@@ -6,14 +6,15 @@ import sys
 import threading
 import time
 import datetime
-if sys.version_info >= (3,0,0):
+
+if sys.version_info >= (3, 0, 0):
     from contextlib import ContextDecorator #pragma: no cover
 else:
     from contextdecorator import ContextDecorator #pragma: no cover
 
 import mock
 from .errors import SegmentNotComplete, TimeOutofBounds
-from .utils import timedelta_to_seconds
+from .utils import timedelta_to_seconds, chained, time_in_seconds
 from .patches import Date, Datetime
 
 
@@ -92,26 +93,54 @@ class Segment(object):
                 raise self.__error[0], self.__error[1], self.__error[2]
             return self.__response
 
-
-class Timeline(object):
+class Timeline(ContextDecorator):
     """
     Timeline context manager. Within this context
     the builtins :func:`time.time`, :func:`time.sleep`,
     :meth:`datetime.datetime.now`, :meth:`datetime.date.today`,
     :meth:`datetime.datetime.utcnow` and :func:`time.gmtime`
     respect the alterations made to the timeline.
+
+    The class can be used either as a context manager or a decorator.
+
+    The following are all valid ways to use it.
+
+    .. code-block:: python
+
+        with Timeline(scale=10, start=datetime.datetime(2012,12,12)):
+            ....
+
+        fast_timeline = Timeline(scale=10).forward(120)
+
+        with fast_timeline as timeline:
+            ....
+
+        future = datetime.date(2015,1,1)
+        future_frozen_timeline = Timeline(scale=10000).freeze().forward(future)
+        with future_frozen_timeline as timeline:
+            ...
+
+        @Timeline(scale=100)
+        def slow():
+            time.sleep(120)
+
+
+    :param float scale: > 1 time will go faster and < 1 it will be slowed down.
+    :param start: if specified starts the timeline at the given value (either a
+        floating point representing seconds since epoch or a
+        :class:`datetime.datetime` object)
+
     """
 
     class_mappings = {
         "date": (datetime.date, Date),
         "datetime": (datetime.datetime, Datetime)
     }
-    def __init__(self):
+
+    def __init__(self, scale=1, start=None):
         self.reference = time.time()
-        self.factor = 1
-        self.offset = 0.0
+        self.offset = time_in_seconds(start) - self.reference if start else 0.0
         self.freeze_point = self.freeze_at = None
-        self.freeze_offset = 0
         self.patchers = []
         self.mock_mappings = {
             "datetime.date": (datetime.date, Date),
@@ -120,6 +149,7 @@ class Timeline(object):
             "time.sleep": (time.sleep, self.__time_sleep),
             "time.gmtime": (time.gmtime, self.__time_gmtime)
         }
+        self.factor = scale
 
     def _get_original(self, fn_or_mod):
         """
@@ -149,8 +179,7 @@ class Timeline(object):
             return offset + freeze_point
         else:
             delta = self._get_original("time.time")() - self.reference
-            return self.reference + (
-            delta * self.factor) + offset - self.freeze_offset
+            return self.reference + (delta * self.factor) + offset
 
     def __check_out_of_bounds(self, offset=None, freeze_point=None):
         """
@@ -181,7 +210,7 @@ class Timeline(object):
         """
         self._get_original("time.sleep")(1.0 * amount / self.factor)
 
-
+    @chained
     def forward(self, amount):
         """
         forwards the timeline by the specified :attr:`amount`
@@ -197,6 +226,7 @@ class Timeline(object):
         self.__check_out_of_bounds(offset=offset)
         self.offset = offset
 
+    @chained
     def rewind(self, amount):
         """
         rewinds the timeline by the specified :attr:`amount`
@@ -212,6 +242,7 @@ class Timeline(object):
         self.__check_out_of_bounds(offset=offset)
         self.offset = offset
 
+    @chained
     def freeze(self, target_time=None):
         """
         freezes the timeline
@@ -224,35 +255,24 @@ class Timeline(object):
         if target_time is None:
             freeze_point = self._get_fake("time.time")()
         else:
-            if isinstance(target_time, (self._get_original("datetime.date"),
-                                        self._get_original(
-                                                "datetime.datetime"))):
-                freeze_point = time.mktime(target_time.timetuple())
-            elif isinstance(target_time, (float, int)):
-                freeze_point = target_time
-            else:
-                raise AttributeError(
-                    "freeze accepts a float/int (time since epoch), datetime or"
-                    "date objects as freeze points. You provided a %s" % (
-                        type(target_time)
-                    )
-                )
+            freeze_point = time_in_seconds(target_time)
         self.__check_out_of_bounds(freeze_point=freeze_point)
         self.freeze_point = freeze_point
-        self.freeze_at = self._get_original("time.time")()
+        self.offset = 0
 
+    @chained
     def unfreeze(self):
         """
         if a call to :meth:`freeze` was made, the timeline will be unfrozen
         to the point which :meth:`freeze` was invoked.
         """
         if self.freeze_point is not None:
-            self.freeze_offset = self.reference - self.freeze_point
-            self.reference = self.freeze_at
-            self.freeze_at = None
+            self.reference = self._get_original("time.time")()
+            self.offset = time_in_seconds(self.freeze_point) - self.reference
             self.freeze_point = None
 
 
+    @chained
     def scale(self, factor):
         """
         changes the speed at which time elapses and how long sleeps last for.
@@ -264,7 +284,7 @@ class Timeline(object):
         self.factor = factor
         self.reference = self._get_original("time.time")()
 
-
+    @chained
     def reset(self):
         """
         resets the current timeline to the actual time now
@@ -272,7 +292,6 @@ class Timeline(object):
         """
 
         self.factor = 1
-        self.freeze_offset = 0
         self.freeze_point = None
         self.reference = self._get_original("time.time")()
         self.offset = 0
@@ -293,6 +312,7 @@ class Timeline(object):
             patcher = mock.patch(time_obj, self._get_fake(time_obj))
             self.patchers.append(patcher)
             patcher.start()
+
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
@@ -301,26 +321,15 @@ class Timeline(object):
         self.patchers = []
 
 
-class ScaledTimeline(Timeline, ContextDecorator):
+class ScaledTimeline(Timeline):
     """
     extension of :class:`Timeline` that accepts a scale factor
     at initialization. Additionally the class can also be used
     as a decorator on a class or function to alter the time factor
     for the class or function's scope.
     """
-    def __init__(self, factor=1, segment=None):
-        self.segment = segment
-        super(ScaledTimeline, self).__init__()
-        self.factor = factor
+    pass
 
-    def __enter__(self):
-        if self.segment:
-            self.segment.start_time = self._get_original("time.time")()
-        return super(ScaledTimeline, self).__enter__()
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        return super(ScaledTimeline, self).__exit__(exc_type, exc_value,
-                                                    traceback)
 
 
 class ScaledRunner(object):
@@ -340,7 +349,8 @@ class ScaledRunner(object):
         """
         managed execution of :attr:`func`
         """
-        with ScaledTimeline(self.factor, self.segment):
+        self.segment.start_time = time.time()
+        with ScaledTimeline(scale=self.factor):
             try:
                 self.segment.complete(
                     self.func(*self.func_args, **self.func_kwargs))
@@ -395,7 +405,7 @@ class ScaledAsyncRunner(ScaledRunner):
 
 def run_sync(factor, func, *args, **kwargs):
     """
-    Executes a callable within a :class:`hiro.ScaledTimeline`
+    Executes a callable within a :class:`hiro.Timeline`
 
     :param int factor: scale factor to use for the timeline during execution
     :param function func: the function to invoke
@@ -408,7 +418,7 @@ def run_sync(factor, func, *args, **kwargs):
 
 def run_async(factor, func, *args, **kwargs):
     """
-    Asynchronously executes a callable within a :class:`hiro.ScaledTimeline`
+    Asynchronously executes a callable within a :class:`hiro.Timeline`
 
     :param int factor: scale factor to use for the timeline during execution
     :param function func: the function to invoke
