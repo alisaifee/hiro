@@ -3,8 +3,8 @@ Project resources
 *****************
 
 - Source : `Github`_
-- Continuous Integration: |coveralls|
-- Test coverage: |travis|
+- Continuous Integration: |travis|
+- Test coverage: |coveralls|
 
 
 .. _Github: http://github.com/alisaifee/hiro
