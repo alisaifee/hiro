@@ -2,9 +2,17 @@
 Project resources
 *****************
 
-- Source : `Github`_
-- Continuous Integration: |travis|
-- Test coverage: |coveralls|
+.. only:: html
+
+    - Source : `Github`_
+    - Continuous Integration: |travis|
+    - Test coverage: |coveralls|
+
+.. only:: latex
+
+    - Source : `Github`_
+    - Continuous Integration: `Travis-CI <https://travis-ci.org/alisaifee/hiro>`_
+    - Test coverage: `Coveralls <https://coveralls.io/r/alisaifee/hiro>`_
 
 
 .. _Github: http://github.com/alisaifee/hiro

@@ -132,7 +132,7 @@ class TestTimelineContext(unittest.TestCase):
             self.assertAlmostEqual((datetime.now() - datetime(2012,12,12,1,0,0)).seconds, 10)
             # ensure post unfreeze, forward operations work
             test_timeline.forward(timedelta(hours=2))
-            self.assertAlmostEqual(timedelta_to_seconds(datetime.now() - datetime(2012,12,12,1,0,0)), 60*60*2 + 10)
+            self.assertAlmostEqual(int(timedelta_to_seconds(datetime.now() - datetime(2012,12,12,1,0,0))), 60*60*2 + 10)
             # reset everything
             test_timeline.reset()
             self.assertEquals(int(time.time()), int(os.popen("date +%s").read().strip()))
@@ -142,10 +142,10 @@ class TestTimelineContext(unittest.TestCase):
     def test_fluent(self):
         start = datetime.now()
         with Timeline().scale(10).forward(120):
-            self.assertEquals(timedelta_to_seconds(datetime.now() - start), 120)
+            self.assertEquals(int(timedelta_to_seconds(datetime.now() - start)), 120)
             time.sleep(10)
-            self.assertEquals(timedelta_to_seconds(datetime.now() - start), 130)
-        self.assertAlmostEqual((datetime.now() - start).seconds, 1, 2)
+            self.assertEquals(int(timedelta_to_seconds(datetime.now() - start)), 130)
+        self.assertAlmostEqual((datetime.now() - start).seconds, 1, 0)
 
     def test_decorated(self):
         start = datetime(2013,1,1,0,0,0)
@@ -153,6 +153,6 @@ class TestTimelineContext(unittest.TestCase):
         @Timeline(scale=10, start=start)
         def _decorated():
             time.sleep(10)
-            self.assertEquals(timedelta_to_seconds(datetime.now() - start), 10)
+            self.assertEquals(int(timedelta_to_seconds(datetime.now() - start)), 10)
         _decorated()
-        self.assertAlmostEqual((datetime.now() - real_start).seconds, 1, 2)
+        self.assertAlmostEqual((datetime.now() - real_start).seconds, 1, 0)
