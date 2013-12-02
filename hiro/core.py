@@ -115,8 +115,8 @@ class Timeline(ContextDecorator):
         with fast_timeline as timeline:
             ....
 
-        future = datetime.date(2015,1,1)
-        future_frozen_timeline = Timeline(scale=10000).freeze().forward(future)
+        delta = datetime.date(2015,1,1) - datetime.date.today()
+        future_frozen_timeline = Timeline(scale=10000).freeze().forward(delta)
         with future_frozen_timeline as timeline:
             ...
 
