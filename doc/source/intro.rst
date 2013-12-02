@@ -61,15 +61,30 @@ To reduce the amount of statements inside the context, certain timeline setup
 tasks can be done via the constructor and/or by using the fluent interface.
 
 
+
 .. code-block:: python
 
     import hiro
+    import time
     from datetime import timedelta, datetime
 
-    freeze_point = datetime.now() - timedelta(hours=24)
-    my_timeline = hiro.Timeline(scale=5).forward(60*60).freeze(freeze_point)
+    start_point = datetime(2012,12,12,0,0,0)
+    my_timeline = hiro.Timeline(scale=5).forward(60*60).freeze()
     with my_timeline as timeline:
-        ....
+        print datetime.now()
+        # OUT: '2012-12-12 01:00:00.000315'
+        time.sleep(5) # effectively 1 second
+        # no effect as time is frozen
+        datetime.now()
+        # OUT: '2012-12-12 01:00:00.000315'
+        timeline.unfreeze()
+        # back to starting point
+        datetime.now()
+        # OUT: '2012-12-12 01:00:00.000317'
+        time.sleep(5) # effectively 1 second
+        # takes effect (+5 seconds)
+        datetime.now()
+        # OUT: '2012-12-12 01:00:05.003100'
 
 
 :class:`hiro.Timeline` can additionally be used as a decorator

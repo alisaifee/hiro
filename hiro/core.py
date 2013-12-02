@@ -263,8 +263,17 @@ class Timeline(ContextDecorator):
     @chained
     def unfreeze(self):
         """
-        if a call to :meth:`freeze` was made, the timeline will be unfrozen
-        to the point which :meth:`freeze` was invoked.
+        if a call to :meth:`freeze` was previously made, the timeline will be
+        unfrozen to the point which :meth:`freeze` was invoked.
+
+        .. warning::
+
+            Since unfreezing will reset the timeline back to the point in
+            when the :meth:`freeze` was invoked - the effect of previous
+            invocations of :meth:`forward` and :meth:`rewind` will
+            be lost. This is by design so that freeze/unfreeze can be used as
+            a checkpoint mechanism.
+
         """
         if self.freeze_point is not None:
             self.reference = self._get_original("time.time")()
@@ -327,6 +336,12 @@ class ScaledTimeline(Timeline):
     at initialization. Additionally the class can also be used
     as a decorator on a class or function to alter the time factor
     for the class or function's scope.
+
+    .. deprecated:: 1.0
+
+        The class is just an alias to :class:`Timeline` and has been
+        left as the library was released with it. Use :class:`Timeline` instead.
+
     """
     pass
 
