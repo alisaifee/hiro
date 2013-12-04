@@ -62,7 +62,7 @@ class TestTimelineContext(unittest.TestCase):
             timeline.rewind(timedelta(days=1))
             amount = (original_datetime - datetime.now())
             amount_seconds = timedelta_to_seconds(amount)
-            self.assertTrue( int(amount_seconds) >= 86400)
+            self.assertTrue( int(amount_seconds) >= 86399, amount_seconds)
 
     def test_freeze(self):
         with Timeline() as timeline:
