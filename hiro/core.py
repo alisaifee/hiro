@@ -208,7 +208,11 @@ class Timeline(ContextDecorator):
         """
         patched version of :func:`time.sleep`
         """
-        self._get_original("time.sleep")(1.0 * amount / self.factor)
+        effective_amount = ((1.0*amount)/self.factor)
+        ref = self._get_original("time.time")()
+        while self._get_original("time.time")() - ref < effective_amount:
+            self._get_original("time.sleep")(effective_amount/100.0)
+        return
 
     @chained
     def forward(self, amount):
