@@ -312,11 +312,10 @@ class Timeline(ContextDecorator):
                                                   kls) == self._get_original(
                         kls):
                     path = "%s.%s" % (name, kls)
-                    if not path in self.mock_mappings:
+                    if not path in self.mock_mappings and not path.startswith("hiro"):
                         patcher = mock.patch(path, self._get_fake(kls))
                         self.patchers.append(patcher)
                         patcher.start()
-
         for time_obj in self.mock_mappings:
             patcher = mock.patch(time_obj, self._get_fake(time_obj))
             self.patchers.append(patcher)
