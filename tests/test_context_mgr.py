@@ -61,8 +61,8 @@ class TestTimelineContext(unittest.TestCase):
             self.assertEquals( (original_day - date.today()).days, 0)
             timeline.rewind(timedelta(days=1))
             amount = (original_datetime - datetime.now())
-            amount_seconds = float(amount.microseconds + (amount.seconds + amount.days * 24 * 3600) * 10**6) / 10**6
-            self.assertAlmostEquals( amount_seconds, 86400, 1 )
+            amount_seconds = timedelta_to_seconds(amount)
+            self.assertTrue( int(amount_seconds) >= 86400)
 
     def test_freeze(self):
         with Timeline() as timeline:
@@ -142,9 +142,9 @@ class TestTimelineContext(unittest.TestCase):
     def test_fluent(self):
         start = datetime.now()
         with Timeline().scale(10).forward(120):
-            self.assertEquals(int(timedelta_to_seconds(datetime.now() - start)), 120)
+            self.assertTrue(int(timedelta_to_seconds(datetime.now() - start)) >= 120)
             time.sleep(10)
-            self.assertEquals(int(timedelta_to_seconds(datetime.now() - start)), 130)
+            self.assertTrue(int(timedelta_to_seconds(datetime.now() - start)) >= 130)
         self.assertTrue((datetime.now() - start).seconds < 10)
 
     def test_decorated(self):
@@ -153,6 +153,6 @@ class TestTimelineContext(unittest.TestCase):
         @Timeline(scale=10, start=start)
         def _decorated():
             time.sleep(10)
-            self.assertEquals(int(timedelta_to_seconds(datetime.now() - start)), 10)
+            self.assertTrue(int(timedelta_to_seconds(datetime.now() - start)) >= 10)
         _decorated()
         self.assertTrue(((datetime.now() - real_start).seconds < 10))
