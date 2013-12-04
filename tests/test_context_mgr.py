@@ -155,4 +155,4 @@ class TestTimelineContext(unittest.TestCase):
             time.sleep(10)
             self.assertEquals(int(timedelta_to_seconds(datetime.now() - start)), 10)
         _decorated()
-        self.assertTrue(((datetime.now() - real_start).seconds < 10)
+        self.assertTrue(((datetime.now() - real_start).seconds < 10))
