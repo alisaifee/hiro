@@ -5,8 +5,6 @@ API Documentation
 
 .. autoclass:: Timeline
     :members:
-.. autoclass:: ScaledTimeline
-    :members:
 .. autofunction:: run_async
 .. autofunction:: run_sync
 

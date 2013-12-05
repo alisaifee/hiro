@@ -329,24 +329,6 @@ class Timeline(ContextDecorator):
         self.patchers = []
 
 
-class ScaledTimeline(Timeline):
-    """
-    extension of :class:`Timeline` that accepts a scale factor
-    at initialization. Additionally the class can also be used
-    as a decorator on a class or function to alter the time factor
-    for the class or function's scope.
-
-    .. warning::
-
-        The class is just an alias to :class:`Timeline` and has been
-        kept around as the library was released with it.
-        Please use :class:`Timeline` instead, as it could be removed arbitrarily.
-
-    """
-    pass
-
-
-
 class ScaledRunner(object):
     """
     manages the execution of a callable within a :class:`hiro.Timeline`
@@ -365,7 +347,7 @@ class ScaledRunner(object):
         managed execution of :attr:`func`
         """
         self.segment.start_time = time.time()
-        with ScaledTimeline(scale=self.factor):
+        with Timeline(scale=self.factor):
             try:
                 self.segment.complete(
                     self.func(*self.func_args, **self.func_kwargs))

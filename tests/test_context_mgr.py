@@ -4,7 +4,6 @@ import time
 from datetime import datetime, date, timedelta
 
 from hiro import Timeline
-from hiro.core import ScaledTimeline
 from hiro.utils import timedelta_to_seconds
 from tests.emulated_modules import sample_1, sample_2
 
@@ -13,19 +12,19 @@ class TestScaledContext(unittest.TestCase):
 
     def test_accelerate(self):
         s = time.time()
-        with ScaledTimeline(100):
+        with Timeline(100):
             time.sleep(10)
         self.assertTrue(time.time() - s < 10)
 
     def test_deccelerate(self):
         s = time.time()
-        with ScaledTimeline(0.5):
+        with Timeline(0.5):
             time.sleep(0.25)
         self.assertTrue(time.time() - s > 0.25)
 
     def test_check_time(self):
         start = time.time()
-        with ScaledTimeline(100):
+        with Timeline(100):
             last = time.time()
             for i in range(0, 10):
                 time.sleep(1)
@@ -35,7 +34,7 @@ class TestScaledContext(unittest.TestCase):
     def test_utc(self):
         start_local = datetime.now()
         start_utc = datetime.utcnow()
-        with ScaledTimeline(50000):
+        with Timeline(50000):
             time.sleep(60*60)
             self.assertEquals( int((datetime.now() - datetime.utcnow()).seconds / 60),
                                int((start_local - start_utc).seconds / 60))
