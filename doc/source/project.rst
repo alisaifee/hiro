@@ -30,3 +30,7 @@ Project resources
 .. |crate| image:: https://pypip.in/v/hiro/badge.png
     :target: https://crate.io/packages/hiro/
     :alt: pypi
+
+.. note::
+
+    Hiro is tested on pythons version 2.6, 2.7, 3.2, 3.3 and pypy >= 2.1
