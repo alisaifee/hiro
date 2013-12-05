@@ -106,7 +106,7 @@ class TestTimelineContext(unittest.TestCase):
             timeline.forward(timedelta(minutes=2))
             self.assertAlmostEquals(time.time(), 121.0, 1)
             timeline.reset()
-            self.assertEquals(int(time.time()), int(os.popen("date +%s").read().strip()))
+            self.assertTrue(int(time.time()) - int(os.popen("date +%s").read().strip()) <= 1)
             timeline.forward(timedelta(days=1))
             self.assertTrue((date.today() - real_day).days == 1)
 
