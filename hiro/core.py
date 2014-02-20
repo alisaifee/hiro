@@ -18,6 +18,7 @@ from .errors import SegmentNotComplete, TimeOutofBounds
 from .utils import timedelta_to_seconds, chained, time_in_seconds
 from .patches import Date, Datetime
 
+BLACKLIST = set()
 
 class Segment(object):
     """
@@ -308,6 +309,8 @@ class Timeline(ContextDecorator):
 
     def __enter__(self):
         for name, module in sys.modules.items():
+            if module in BLACKLIST:
+                continue
             for kls in self.class_mappings:
                 try:
                     if kls in dir(module) and getattr(module,
@@ -322,7 +325,7 @@ class Timeline(ContextDecorator):
                 # sys modules.
                 # pylint: disable=bare-except
                 except:
-                    pass
+                    BLACKLIST.add(module)
         for time_obj in self.mock_mappings:
             patcher = mock.patch(time_obj, self._get_fake(time_obj))
             self.patchers.append(patcher)
