@@ -309,14 +309,20 @@ class Timeline(ContextDecorator):
     def __enter__(self):
         for name, module in sys.modules.items():
             for kls in self.class_mappings:
-                if kls in dir(module) and getattr(module,
+                try:
+                    if kls in dir(module) and getattr(module,
                                                   kls) == self._get_original(
                         kls):
-                    path = "%s.%s" % (name, kls)
-                    if not path in self.mock_mappings:
-                        patcher = mock.patch(path, self._get_fake(kls))
-                        self.patchers.append(patcher)
-                        patcher.start()
+                        path = "%s.%s" % (name, kls)
+                        if not path in self.mock_mappings:
+                            patcher = mock.patch(path, self._get_fake(kls))
+                            self.patchers.append(patcher)
+                            patcher.start()
+                # this is done for cases where invalid modules are on
+                # sys modules.
+                # pylint: disable=bare-except
+                except:
+                    pass
         for time_obj in self.mock_mappings:
             patcher = mock.patch(time_obj, self._get_fake(time_obj))
             self.patchers.append(patcher)
@@ -352,6 +358,8 @@ class ScaledRunner(object):
             try:
                 self.segment.complete(
                     self.func(*self.func_args, **self.func_kwargs))
+            # will be rethrown
+            # pylint: disable=bare-except
             except:
                 self.segment.complete_with_error(sys.exc_info())
         self.segment.complete_time = time.time()
