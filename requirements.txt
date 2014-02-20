@@ -1,3 +1,4 @@
 contextdecorator 
+six>=1.4.1
 mock
 

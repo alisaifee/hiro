@@ -14,8 +14,6 @@ import re
 this_dir = os.path.abspath(os.path.dirname(__file__))
 REQUIREMENTS = filter(None, open(os.path.join(this_dir, 'requirements.txt')).read().splitlines())
 extra = {}
-if sys.version_info >= (3,):
-    extra['use_2to3'] = True
 version = re.compile("__version__\s*=\s*\"(.*?)\"").findall(open("hiro/version.py").read())[0]
 
 
@@ -33,7 +31,6 @@ setup(
     classifiers=[k for k in open('CLASSIFIERS').read().split('\n') if k],
     description='time manipulation utilities for python',
     long_description=open('README.rst').read(),
-    packages = ["hiro"],
-    **extra
+    packages = ["hiro"]
 )
 

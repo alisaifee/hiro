@@ -6,6 +6,7 @@ import sys
 import threading
 import time
 import datetime
+from six import reraise
 
 if sys.version_info >= (3, 0, 0):
     from contextlib import ContextDecorator #pragma: no cover
@@ -90,7 +91,7 @@ class Segment(object):
             raise SegmentNotComplete
         else:
             if self.__error:
-                raise self.__error[0], self.__error[1], self.__error[2]
+                reraise(self.__error[0], self.__error[1], self.__error[2])
             return self.__response
 
 class Timeline(ContextDecorator):
@@ -155,7 +156,7 @@ class Timeline(ContextDecorator):
         """
         returns the original moduel or function
         """
-        if self.mock_mappings.has_key(fn_or_mod):
+        if fn_or_mod in self.mock_mappings:
             return self.mock_mappings[fn_or_mod][0]
         else:
             return self.class_mappings[fn_or_mod][0]
@@ -164,7 +165,7 @@ class Timeline(ContextDecorator):
         """
         returns the mocked/patched module or function
         """
-        if self.mock_mappings.has_key(fn_or_mod):
+        if fn_or_mod in self.mock_mappings:
             return self.mock_mappings[fn_or_mod][1]
         else:
             return self.class_mappings[fn_or_mod][1]
