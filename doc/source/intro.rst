@@ -87,7 +87,9 @@ tasks can be done via the constructor and/or by using the fluent interface.
         # OUT: '2012-12-12 01:00:05.003100'
 
 
-:class:`hiro.Timeline` can additionally be used as a decorator
+:class:`hiro.Timeline` can additionally be used as a decorator. If the decorated
+function expects has a ``timeline`` argument, the :class:`hiro.Timeline` will be
+passed to it.
 
 .. code-block:: python
 
@@ -99,6 +101,14 @@ tasks can be done via the constructor and/or by using the fluent interface.
         datetime.datetime.now()
         # OUT: '2013-11-30 14:27:43.409291'
         time.sleep(60*60) # effectively 72 ms
+        datetime.datetime.now()
+        # OUT: '2013-11-30 15:28:36.240675'
+
+    @hiro.Timeline()
+    def sleeper_aware(timeline):
+        datetime.datetime.now()
+        # OUT: '2013-11-30 14:27:43.409291'
+        timeline.forward(60*60)
         datetime.datetime.now()
         # OUT: '2013-11-30 15:28:36.240675'
 

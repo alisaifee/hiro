@@ -155,3 +155,13 @@ class TestTimelineContext(unittest.TestCase):
             self.assertTrue(int(timedelta_to_seconds(datetime.now() - start)) >= 10)
         _decorated()
         self.assertTrue(((datetime.now() - real_start).seconds < 10))
+
+    def test_decorated_with_argument(self):
+        @Timeline()
+        def _decorated(timeline):
+            self.assertTrue(isinstance(timeline, Timeline))
+        _decorated()
+        @Timeline()
+        def _decorated(timeline=None):
+            self.assertTrue(isinstance(timeline, Timeline))
+        _decorated()

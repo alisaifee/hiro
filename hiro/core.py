@@ -1,6 +1,7 @@
 """
 timeline & runner implementation
 """
+import inspect
 
 import sys
 import threading
@@ -8,17 +9,36 @@ import time
 import datetime
 from six import reraise
 
-if sys.version_info >= (3, 0, 0):
-    from contextlib import ContextDecorator #pragma: no cover
-else:
-    from contextdecorator import ContextDecorator #pragma: no cover
-
 import mock
+from functools import wraps
 from .errors import SegmentNotComplete, TimeOutofBounds
 from .utils import timedelta_to_seconds, chained, time_in_seconds
 from .patches import Date, Datetime
 
 BLACKLIST = set()
+_NO_EXCEPTION = (None, None, None)
+class Decorator(object):
+    def __call__(self, fn):
+        @wraps(fn)
+        def inner(*args, **kw):
+            self.__enter__()
+            exc = _NO_EXCEPTION
+            try:
+                if "timeline" in inspect.getargspec(fn).args:
+                    result = fn(*args, timeline=self, **kw)
+                else:
+                    result = fn(*args, **kw)
+            except Exception:
+                exc = sys.exc_info()
+
+            catch = self.__exit__(*exc)
+
+            if not catch and exc is not _NO_EXCEPTION:
+                reraise(*exc)
+            return result
+
+        return inner
+
 
 class Segment(object):
     """
@@ -95,7 +115,7 @@ class Segment(object):
                 reraise(self.__error[0], self.__error[1], self.__error[2])
             return self.__response
 
-class Timeline(ContextDecorator):
+class Timeline(Decorator):
     """
     Timeline context manager. Within this context
     the builtins :func:`time.time`, :func:`time.sleep`,

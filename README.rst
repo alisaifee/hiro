@@ -119,6 +119,13 @@ tasks can be done via the constructor and/or by using the fluent interface.
         datetime.datetime.now()
         # OUT: '2013-11-30 15:28:36.240675'
 
+    @hiro.Timeline()
+    def sleeper_aware(timeline):
+        datetime.datetime.now()
+        # OUT: '2013-11-30 14:27:43.409291'
+        timeline.forward(60*60)
+        datetime.datetime.now()
+        # OUT: '2013-11-30 15:28:36.240675'
 
 ==============
 Hiro executors
