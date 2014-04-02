@@ -5,7 +5,7 @@ from datetime import datetime, date, timedelta
 
 from hiro import Timeline
 from hiro.utils import timedelta_to_seconds
-from tests.emulated_modules import sample_1, sample_2
+from tests.emulated_modules import sample_1, sample_2, sample_3
 
 
 class TestScaledContext(unittest.TestCase):
@@ -73,6 +73,12 @@ class TestTimelineContext(unittest.TestCase):
         with Timeline() as timeline:
             timeline.freeze()
             originals = sample_2.sub_module_2.sub_sample_2_1_time(), sample_2.sub_module_2.sub_sample_2_1_now()
+            time.sleep(1)
+            self.assertEquals(time.time(), originals[0])
+            self.assertEquals(datetime.now(), originals[1])
+        with Timeline() as timeline:
+            timeline.freeze()
+            originals = sample_3.sub_module_3.sub_sample_3_1_time(), sample_3.sub_module_3.sub_sample_3_1_now()
             time.sleep(1)
             self.assertEquals(time.time(), originals[0])
             self.assertEquals(datetime.now(), originals[1])

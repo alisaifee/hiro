@@ -1,6 +1,7 @@
 """
 timeline & runner implementation
 """
+import copy
 import inspect
 
 import sys
@@ -171,6 +172,11 @@ class Timeline(Decorator):
             "time.sleep": (time.sleep, self.__time_sleep),
             "time.gmtime": (time.gmtime, self.__time_gmtime)
         }
+        self.func_mappings = {
+            "time": (time.time, self.__time_time),
+            "sleep": (time.sleep, self.__time_sleep),
+            "gmtime": (time.gmtime, self.__time_gmtime)
+        }
         self.factor = scale
 
     def _get_original(self, fn_or_mod):
@@ -179,6 +185,8 @@ class Timeline(Decorator):
         """
         if fn_or_mod in self.mock_mappings:
             return self.mock_mappings[fn_or_mod][0]
+        elif fn_or_mod in self.func_mappings:
+            return self.func_mappings[fn_or_mod][0]
         else:
             return self.class_mappings[fn_or_mod][0]
 
@@ -188,6 +196,8 @@ class Timeline(Decorator):
         """
         if fn_or_mod in self.mock_mappings:
             return self.mock_mappings[fn_or_mod][1]
+        elif fn_or_mod in self.func_mappings:
+            return self.func_mappings[fn_or_mod][1]
         else:
             return self.class_mappings[fn_or_mod][1]
 
@@ -331,14 +341,16 @@ class Timeline(Decorator):
         for name, module in sys.modules.items():
             if module in BLACKLIST:
                 continue
-            for kls in self.class_mappings:
+            mappings = copy.copy(self.class_mappings)
+            mappings.update(self.func_mappings)
+            for obj in mappings:
                 try:
-                    if kls in dir(module) and getattr(module,
-                                                  kls) == self._get_original(
-                        kls):
-                        path = "%s.%s" % (name, kls)
+                    if obj in dir(module) and getattr(module,
+                                                  obj) == self._get_original(
+                        obj):
+                        path = "%s.%s" % (name, obj)
                         if not path in self.mock_mappings:
-                            patcher = mock.patch(path, self._get_fake(kls))
+                            patcher = mock.patch(path, self._get_fake(obj))
                             self.patchers.append(patcher)
                             patcher.start()
                 # this is done for cases where invalid modules are on
