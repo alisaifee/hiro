@@ -2,6 +2,7 @@ import os
 import unittest
 import time
 from datetime import datetime, date, timedelta
+import math
 
 from hiro import Timeline
 from hiro.utils import timedelta_to_seconds
@@ -34,10 +35,11 @@ class TestScaledContext(unittest.TestCase):
     def test_utc(self):
         start_local = datetime.now()
         start_utc = datetime.utcnow()
-        with Timeline(50000):
+        with Timeline(100000):
             time.sleep(60*60)
-            self.assertEquals( int((datetime.now() - datetime.utcnow()).seconds / 60),
-                               int((start_local - start_utc).seconds / 60))
+            self.assertEquals( math.ceil((datetime.now() - datetime.utcnow()).seconds / 60.0 / 60.0),
+                               math.ceil((start_local - start_utc).seconds / 60.0 / 60.0))
+
             time.sleep(60*60*23)
             self.assertEquals( (datetime.now() - start_local).days, 1 )
             self.assertEquals( (datetime.utcnow() - start_utc).days, 1 )
@@ -107,9 +109,9 @@ class TestTimelineContext(unittest.TestCase):
             timeline.unfreeze()
             timeline.scale(10)
             time.sleep(1)
-            self.assertAlmostEquals(time.time(), 1.0, 1)
+            self.assertEqual(int(time.time()), 1)
             timeline.forward(timedelta(minutes=2))
-            self.assertAlmostEquals(time.time(), 121.0, 1)
+            self.assertEqual(int(time.time()), 121)
             timeline.reset()
             self.assertTrue(int(time.time()) - int(os.popen("date +%s").read().strip()) <= 1)
             timeline.forward(timedelta(days=1))
