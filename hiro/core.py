@@ -351,8 +351,8 @@ class Timeline(Decorator):
                         path = "%s.%s" % (name, obj)
                         if not path in self.mock_mappings:
                             patcher = mock.patch(path, self._get_fake(obj))
-                            self.patchers.append(patcher)
                             patcher.start()
+                            self.patchers.append(patcher)
                 # this is done for cases where invalid modules are on
                 # sys modules.
                 # pylint: disable=bare-except
@@ -360,8 +360,8 @@ class Timeline(Decorator):
                     BLACKLIST.add(module)
         for time_obj in self.mock_mappings:
             patcher = mock.patch(time_obj, self._get_fake(time_obj))
-            self.patchers.append(patcher)
             patcher.start()
+            self.patchers.append(patcher)
 
         return self
 
