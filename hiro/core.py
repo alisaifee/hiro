@@ -338,7 +338,8 @@ class Timeline(Decorator):
         self.offset = 0
 
     def __enter__(self):
-        for name, module in sys.modules.items():
+        for name in list(sys.modules.keys()):
+            module = sys.modules[name]
             if module in BLACKLIST:
                 continue
             mappings = copy.copy(self.class_mappings)
