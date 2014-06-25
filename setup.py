@@ -12,7 +12,7 @@ import sys
 import re
 
 this_dir = os.path.abspath(os.path.dirname(__file__))
-REQUIREMENTS = filter(None, open(os.path.join(this_dir, 'requirements.txt')).read().splitlines())
+REQUIREMENTS = filter(None, open(os.path.join(this_dir, 'requirements/main.txt')).read().splitlines())
 extra = {}
 version = re.compile("__version__\s*=\s*\"(.*?)\"").findall(open("hiro/version.py").read())[0]
 

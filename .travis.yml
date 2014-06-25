@@ -7,8 +7,8 @@ python:
     - "pypy"
 
 install:
-    - pip install -r ci_requirements.txt --use-mirrors
+    - pip install -r requirements/ci.txt
 
-script: nosetests --with-cov -v -w tests 
+script: nosetests --with-cov -v -w tests
 after_success:
     - coveralls
