@@ -33,4 +33,4 @@ Project resources
 
 .. note::
 
-    Hiro is tested on pythons version 2.6, 2.7, 3.2, 3.3 and pypy >= 2.1
+    Hiro is tested on pythons version 2.6, 2.7, 3.2, 3.3, 3.4 and pypy >= 2.1
