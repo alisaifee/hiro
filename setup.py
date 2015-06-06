@@ -22,7 +22,7 @@ setup(
     name='hiro',
     author = __author__,
     author_email = __email__,
-    license = open("LICENSE").read(),
+    license = "MIT",
     url="http://hiro.readthedocs.org",
     zip_safe = False,
     include_package_data = True,
