@@ -4,7 +4,7 @@
     :target: https://coveralls.io/r/alisaifee/hiro?branch=master
 .. |license| image:: https://img.shields.io/pypi/l/hiro.svg?style=flat-square
     :target: https://pypi.python.org/pypi/hiro
-.. |pypi| image:: https://img.shields.io/pypi/v/hiro
+.. |pypi| image:: https://img.shields.io/pypi/v/hiro.svg?style=flat-square
     :target: https://pypi.python.org/pypi/hiro
 
 
