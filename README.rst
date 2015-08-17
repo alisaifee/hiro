@@ -7,9 +7,6 @@
 .. |pypi| image:: https://img.shields.io/pypi/v/hiro.svg?style=flat-square
     :target: https://pypi.python.org/pypi/hiro
 
-**ADOPT ME: The author of this project is unable to continue maintaining it 
-and is looking for volunteers to adopt it. Please email me at ali@indydevs.org
-if you feel you could give this project a new home**
 
 *********************************************
 Hiro - time manipulation utilities for python
