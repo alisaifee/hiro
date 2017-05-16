@@ -39,7 +39,7 @@ class Datetime(realdatetime):
 
     @classmethod
     def utcnow(cls):
-        return cls.fromtimestamp(time.mktime(time.gmtime()))
+        return cls.utcfromtimestamp(time.time())
 
 @six.add_metaclass(DateMeta)
 class Date(realdate):
