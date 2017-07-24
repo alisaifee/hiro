@@ -13,7 +13,7 @@ def timedelta_to_seconds(delta):
     """
     seconds = delta.microseconds
     seconds += (delta.seconds + delta.days * 24 * 3600) * 10 ** 6
-    return seconds / 10 ** 6
+    return float(seconds) / 10 ** 6
 
 
 
