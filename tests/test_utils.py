@@ -31,8 +31,8 @@ class TestTimeInSeconds(unittest.TestCase):
         self.assertEqual(time_in_seconds(d), 0)
 
     def test_invalid_type(self):
-        with self.assertRaises(InvalidTypeError):
-            time_in_seconds("this is a string")
+        self.assertRaises(
+            InvalidTypeError, time_in_seconds, "this is a string")
 
 
 class TestChained(unittest.TestCase):
