@@ -43,5 +43,3 @@ def chained(method):
         result = method(self, *args, **kwargs)
         return self if result is None else result
     return wrapper
-
-
