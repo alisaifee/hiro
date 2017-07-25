@@ -45,12 +45,12 @@ class TestChained(unittest.TestCase):
         self.obj = self.Foo()
 
     def test_no_return(self):
-        self.assertIs(self.obj.return_value(), self.obj)
+        self.assertTrue(self.obj.return_value() is self.obj)
 
     def test_with_return(self):
         o = object()
-        self.assertIs(self.obj.return_value(o), o)
+        self.assertTrue(self.obj.return_value(o) is o)
 
     def test_kwargs(self):
         o = object()
-        self.assertIs(self.obj.return_value(value=o), o)
+        self.assertTrue(self.obj.return_value(value=o) is o)
