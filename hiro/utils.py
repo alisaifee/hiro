@@ -1,9 +1,9 @@
 """
 random utility functions
 """
+import calendar
 import datetime
 import functools
-import time
 from .errors import InvalidTypeError
 
 
@@ -25,7 +25,7 @@ def time_in_seconds(value):
     if isinstance(value, (float, int)):
         return value
     elif isinstance(value, (datetime.date, datetime.datetime)):
-        return time.mktime(value.timetuple())
+        return calendar.timegm(value.timetuple())
     else:
         raise InvalidTypeError(value)
 
