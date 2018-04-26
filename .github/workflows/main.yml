@@ -12,6 +12,7 @@ jobs:
     strategy:
       matrix:
         python-version: [2.7, pypy2, 3.5, 3.7, 3.8, pypy3]
+        timezone: ["UTC", "Europe/Paris", "Asia/Hong_Kong"]
     steps:
     - uses: actions/checkout@v2
     - name: Cache dependencies
@@ -30,6 +31,8 @@ jobs:
         python -m pip install --upgrade pip setuptools wheel
         pip install -r requirements/ci.txt
     - name: Tests
+      env:
+        TZ: ${{ matrix.timezone }}
       run: |
         pytest
     - name: Post Coverage
