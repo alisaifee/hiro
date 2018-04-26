@@ -1,9 +1,10 @@
 import datetime
+import time
 import unittest
 
 import hiro
 from hiro.errors import InvalidTypeError
-from hiro.utils import timedelta_to_seconds, time_in_seconds, chained
+from hiro.utils import timedelta_to_seconds, time_in_seconds, chained, utc
 
 
 class TestTimeDeltaToSeconds(unittest.TestCase):
@@ -26,8 +27,15 @@ class TestTimeInSeconds(unittest.TestCase):
         d = datetime.date(1970, 1, 1)
         self.assertEqual(time_in_seconds(d), 0)
 
+        d = d + datetime.timedelta(days=1234)
+        self.assertEqual(time_in_seconds(d), 1234 * 24 * 60 * 60)
+
     def test_datetime(self):
         d = datetime.datetime(1970, 1, 1, 0, 0, 0)
+        self.assertEqual(time_in_seconds(d), time.mktime(d.timetuple()))
+
+    def test_tzaware_datetime(self):
+        d = datetime.datetime(1970, 1, 1, 0, 0, 0, tzinfo=utc)
         self.assertEqual(time_in_seconds(d), 0)
 
     def test_invalid_type(self):

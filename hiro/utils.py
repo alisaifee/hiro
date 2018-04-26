@@ -4,8 +4,26 @@ random utility functions
 import calendar
 import datetime
 import functools
+import time
 from .errors import InvalidTypeError
 
+# Python2 doesn't have the UTC tzinfo object. Backport it from Python3.
+if hasattr(datetime, 'timezone'):
+    utc = datetime.timezone.utc
+else:
+    class UTC(datetime.tzinfo):
+        """UTC"""
+
+        def utcoffset(self, dt):
+            return datetime.timedelta(0)
+
+        def tzname(self, dt):
+            return "UTC"
+
+        def dst(self, dt):
+            return datetime.timedelta(0)
+
+    utc = UTC()
 
 def timedelta_to_seconds(delta):
     """
@@ -20,12 +38,30 @@ def timedelta_to_seconds(delta):
 def time_in_seconds(value):
     """
     normalized either a datetime.date, datetime.datetime or float
-    to a float
+    to a float corresponding to a UTC timestamp.
+
+    datetime.date objects are converted to the timestamp of midnight UTC on
+    that date.
+
+    Naive datetime objects (without timezone information) are taken in the
+    local timezone.
     """
     if isinstance(value, (float, int)):
         return value
-    elif isinstance(value, (datetime.date, datetime.datetime)):
-        return calendar.timegm(value.timetuple())
+    elif isinstance(value, datetime.datetime):
+        if value.tzinfo is None:
+            return time.mktime(value.timetuple())
+        else:
+            return calendar.timegm(
+                value.astimezone(utc).timetuple()
+            )
+    elif isinstance(value, datetime.date):
+        # We're really explicit here but we could just use value.timetuple()
+        return calendar.timegm(
+            datetime.datetime.combine(
+                value, datetime.time(0, 0, 0, 0, utc)
+            ).timetuple()
+        )
     else:
         raise InvalidTypeError(value)
 
