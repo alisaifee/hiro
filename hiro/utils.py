@@ -1,9 +1,9 @@
 """
 random utility functions
 """
-import calendar
 import datetime
 import functools
+import time
 from .errors import InvalidTypeError
 
 
@@ -20,12 +20,15 @@ def timedelta_to_seconds(delta):
 def time_in_seconds(value):
     """
     normalized either a datetime.date, datetime.datetime or float
-    to a float
+    to a float corresponding to a UTC timestamp.
+
+    Naive datetime objects (without timezone information) are taken in the
+    local timezone.
     """
     if isinstance(value, (float, int)):
         return value
     elif isinstance(value, (datetime.date, datetime.datetime)):
-        return calendar.timegm(value.timetuple())
+        return time.mktime(value.timetuple())
     else:
         raise InvalidTypeError(value)
 

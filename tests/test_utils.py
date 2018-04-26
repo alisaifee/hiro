@@ -1,4 +1,5 @@
 import datetime
+import time
 import unittest
 
 import hiro
@@ -24,11 +25,12 @@ class TestTimeInSeconds(unittest.TestCase):
 
     def test_date(self):
         d = datetime.date(1970, 1, 1)
-        self.assertEqual(time_in_seconds(d), 0)
+        midnight_epoch = datetime.datetime(1970, 1, 1, 0, 0, 0)
+        self.assertEqual(time_in_seconds(d), time_in_seconds(midnight_epoch))
 
     def test_datetime(self):
         d = datetime.datetime(1970, 1, 1, 0, 0, 0)
-        self.assertEqual(time_in_seconds(d), 0)
+        self.assertEqual(time_in_seconds(d), time.mktime(d.timetuple()))
 
     def test_invalid_type(self):
         self.assertRaises(
