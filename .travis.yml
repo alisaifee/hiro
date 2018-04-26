@@ -6,6 +6,11 @@ python:
     - "3.4"
     - "3.5"
     - "pypy"
+env:
+  matrix:
+    - TZ=UTC
+    - TZ=Europe/Paris
+    - TZ=Asia/Hong_Kong
 
 install:
     - pip install -r requirements/ci.txt
