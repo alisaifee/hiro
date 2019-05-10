@@ -200,4 +200,4 @@ class TestTimelineContext(unittest.TestCase):
                 pass
 
             hiro_dummy_module.__dir__.assert_called_once()
-            self.assertIn(sys.modules['hiro_dummy_module'], BLACKLIST)
+            self.assertTrue(hiro_dummy_module in BLACKLIST)
