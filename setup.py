@@ -27,7 +27,7 @@ setup(
     zip_safe = False,
     include_package_data = True,
     version = version,
-    install_requires = REQUIREMENTS,
+    install_requires = list(REQUIREMENTS),
     classifiers=[k for k in open('CLASSIFIERS').read().split('\n') if k],
     description='time manipulation utilities for python',
     long_description=open('README.rst').read(),
