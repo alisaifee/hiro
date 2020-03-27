@@ -1,8 +1,10 @@
 import os
 import unittest
 import time
+import sys
 from datetime import datetime, date, timedelta
 import math
+import mock
 
 from hiro import Timeline
 from hiro.utils import timedelta_to_seconds
@@ -80,10 +82,11 @@ class TestTimelineContext(unittest.TestCase):
             self.assertEquals(datetime.now(), originals[1])
         with Timeline() as timeline:
             timeline.freeze()
-            originals = sample_3.sub_module_3.sub_sample_3_1_time(), sample_3.sub_module_3.sub_sample_3_1_now()
+            originals = sample_3.sub_module_3.sub_sample_3_1_time(), sample_3.sub_module_3.sub_sample_3_1_now(), sample_3.sub_module_3.sub_sample_3_1_gmtime()
             time.sleep(1)
             self.assertEquals(time.time(), originals[0])
             self.assertEquals(datetime.now(), originals[1])
+            self.assertEquals(time.gmtime(), originals[2])
 
     def test_freeze_target(self):
         with Timeline() as timeline:
@@ -173,3 +176,28 @@ class TestTimelineContext(unittest.TestCase):
         def _decorated(timeline=None):
             self.assertTrue(isinstance(timeline, Timeline))
         _decorated()
+
+    def test_decorated_exception(self):
+        class SomeException(Exception):
+            pass
+
+        @Timeline()
+        def _decorated():
+            raise SomeException("asdf")
+
+        self.assertRaises(SomeException, _decorated)
+
+    @mock.patch('hiro.core.BLACKLIST', new_callable=set)
+    def test_patch_blacklist(self, BLACKLIST):
+        hiro_dummy_module = mock.MagicMock(
+            __dir__=mock.MagicMock(side_effect=Exception))
+
+        with mock.patch.dict('sys.modules', {'hiro_dummy_module': hiro_dummy_module}):
+            with Timeline().freeze() as timeline:
+                pass
+
+            with Timeline().freeze() as timeline:
+                pass
+
+            hiro_dummy_module.__dir__.assert_called_once()
+            self.assertTrue(hiro_dummy_module in BLACKLIST)

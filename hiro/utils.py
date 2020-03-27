@@ -4,6 +4,7 @@ random utility functions
 import calendar
 import datetime
 import functools
+import six
 from .errors import InvalidTypeError
 
 
@@ -22,7 +23,7 @@ def time_in_seconds(value):
     normalized either a datetime.date, datetime.datetime or float
     to a float
     """
-    if isinstance(value, (float, int)):
+    if isinstance(value, (float, six.integer_types)):
         return value
     elif isinstance(value, (datetime.date, datetime.datetime)):
         return calendar.timegm(value.timetuple())

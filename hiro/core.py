@@ -344,8 +344,9 @@ class Timeline(Decorator):
                 continue
             mappings = copy.copy(self.class_mappings)
             mappings.update(self.func_mappings)
-            for obj in mappings:
-                try:
+
+            try:
+                for obj in mappings:
                     if obj in dir(module) and getattr(module,
                                                   obj) == self._get_original(
                         obj):
@@ -354,11 +355,12 @@ class Timeline(Decorator):
                             patcher = mock.patch(path, self._get_fake(obj))
                             patcher.start()
                             self.patchers.append(patcher)
-                # this is done for cases where invalid modules are on
-                # sys modules.
-                # pylint: disable=bare-except
-                except:
-                    BLACKLIST.add(module)
+            # this is done for cases where invalid modules are on
+            # sys modules.
+            # pylint: disable=bare-except
+            except:
+                BLACKLIST.add(module)
+
         for time_obj in self.mock_mappings:
             patcher = mock.patch(time_obj, self._get_fake(time_obj))
             patcher.start()

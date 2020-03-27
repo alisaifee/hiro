@@ -1,4 +1,5 @@
 import datetime
+import six
 import unittest
 
 import hiro
@@ -20,6 +21,9 @@ class TestTimeDeltaToSeconds(unittest.TestCase):
 class TestTimeInSeconds(unittest.TestCase):
     def test_passthrough(self):
         self.assertEqual(time_in_seconds(1), 1)
+
+        long_instance = long(1) if six.PY2 else 1
+        self.assertEqual(time_in_seconds(long_instance), long_instance)
         self.assertEqual(time_in_seconds(1.0), 1.0)
 
     def test_date(self):
