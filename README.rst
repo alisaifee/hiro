@@ -1,5 +1,5 @@
 .. |travis| image:: https://img.shields.io/travis/alisaifee/hiro/master.svg?style=flat-square
-    :target: https://travis-ci.org/#!/alisaifee/hiro?branch=master
+    :target: https://travis-ci.org/alisaifee/hiro?branch=master
 .. |coveralls| image:: https://img.shields.io/coveralls/alisaifee/hiro/master.svg?style=flat-square
     :target: https://coveralls.io/r/alisaifee/hiro?branch=master
 .. |license| image:: https://img.shields.io/pypi/l/hiro.svg?style=flat-square
