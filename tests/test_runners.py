@@ -16,7 +16,6 @@ class TestSyncRunner(unittest.TestCase):
         self.assertTrue(f.get_execution_time() < 1)
         self.assertEquals(f.get_response(), 1)
 
-
     def test_scale_up_runner_fail(self):
         def _slow_func():
             time.sleep(1)
@@ -34,7 +33,6 @@ class TestASyncRunner(unittest.TestCase):
         self.assertTrue(f.is_running())
         f.join()
         self.assertTrue(f.get_execution_time() < 1)
-
 
     def test_scale_up_runner_fail(self):
         def _slow_func():
@@ -56,4 +54,4 @@ class TestASyncRunner(unittest.TestCase):
         self.assertTrue(f.is_running())
         f.join()
         self.assertRaises(Exception, f.get_response)
-        self.assertTrue(f.get_execution_time() < 1 )
+        self.assertTrue(f.get_execution_time() < 1)

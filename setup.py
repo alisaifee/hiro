@@ -8,29 +8,32 @@ __copyright__ = "Copyright 2013, Ali-Akber Saifee"
 
 from setuptools import setup
 import os
-import sys
 import re
 
-this_dir = os.path.abspath(os.path.dirname(__file__))
-REQUIREMENTS = filter(None, open(os.path.join(this_dir, 'requirements/main.txt')).read().splitlines())
+THIS_DIR = os.path.abspath(os.path.dirname(__file__))
+REQUIREMENTS = [
+    k for k in open(
+        os.path.join(THIS_DIR, 'requirements', 'main.txt')
+    ).read().splitlines() if k.strip()
+]
+
 extra = {}
-version = re.compile("__version__\s*=\s*\"(.*?)\"").findall(open("hiro/version.py").read())[0]
-
-
+version = re.compile(r'__version__\s*=\s*"(.*?)"').findall(
+    open("hiro/version.py").read()
+)[0]
 
 setup(
     name='hiro',
-    author = __author__,
-    author_email = __email__,
-    license = "MIT",
+    author=__author__,
+    author_email=__email__,
+    license="MIT",
     url="http://hiro.readthedocs.org",
-    zip_safe = False,
-    include_package_data = True,
-    version = version,
-    install_requires = list(REQUIREMENTS),
+    zip_safe=False,
+    include_package_data=True,
+    version=version,
+    install_requires=list(REQUIREMENTS),
     classifiers=[k for k in open('CLASSIFIERS').read().split('\n') if k],
     description='time manipulation utilities for python',
     long_description=open('README.rst').read(),
-    packages = ["hiro"]
+    packages=["hiro"]
 )
-

@@ -2,7 +2,6 @@ import datetime
 import six
 import unittest
 
-import hiro
 from hiro.errors import InvalidTypeError
 from hiro.utils import timedelta_to_seconds, time_in_seconds, chained
 
@@ -14,15 +13,17 @@ class TestTimeDeltaToSeconds(unittest.TestCase):
 
     def test_days(self):
         delta = datetime.timedelta(days=10)
-        self.assertEqual(timedelta_to_seconds(delta),
-                         delta.days * 24 * 60 * 60)
+        self.assertEqual(
+            timedelta_to_seconds(delta),
+            delta.days * 24 * 60 * 60
+        )
 
 
 class TestTimeInSeconds(unittest.TestCase):
     def test_passthrough(self):
         self.assertEqual(time_in_seconds(1), 1)
 
-        long_instance = long(1) if six.PY2 else 1
+        long_instance = long(1) if six.PY2 else 1  # noqa: F821
         self.assertEqual(time_in_seconds(long_instance), long_instance)
         self.assertEqual(time_in_seconds(1.0), 1.0)
 

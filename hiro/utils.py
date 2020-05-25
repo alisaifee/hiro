@@ -17,7 +17,6 @@ def timedelta_to_seconds(delta):
     return float(seconds) / 10 ** 6
 
 
-
 def time_in_seconds(value):
     """
     normalized either a datetime.date, datetime.datetime or float
@@ -30,11 +29,13 @@ def time_in_seconds(value):
     else:
         raise InvalidTypeError(value)
 
-#adopted from: http://www.snip2code.com/Snippet/2535/Fluent-interface-decorators
 
 def chained(method):
     """
     Method decorator to allow chaining.
+
+    adopted from:
+    http://www.snip2code.com/Snippet/2535/Fluent-interface-decorators
     """
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):

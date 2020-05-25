@@ -17,6 +17,7 @@ class DatetimeMeta(abc.ABCMeta):
     def __instancecheck__(cls, instance):
         return isinstance(instance, realdatetime)
 
+
 class DateMeta(type):
     """
     meta class to allow interaction between :class:`datetime.date`
@@ -25,6 +26,7 @@ class DateMeta(type):
     """
     def __instancecheck__(cls, instance):
         return isinstance(instance, realdate)
+
 
 @six.add_metaclass(DatetimeMeta)
 class Datetime(realdatetime):
@@ -40,6 +42,7 @@ class Datetime(realdatetime):
     @classmethod
     def utcnow(cls):
         return cls.utcfromtimestamp(time.time())
+
 
 @six.add_metaclass(DateMeta)
 class Date(realdate):

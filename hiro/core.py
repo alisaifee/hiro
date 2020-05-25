@@ -18,6 +18,8 @@ from .patches import Date, Datetime
 
 BLACKLIST = set()
 _NO_EXCEPTION = (None, None, None)
+
+
 class Decorator(object):
     def __call__(self, fn):
         @wraps(fn)
@@ -116,6 +118,7 @@ class Segment(object):
                 reraise(self.__error[0], self.__error[1], self.__error[2])
             return self.__response
 
+
 class Timeline(Decorator):
     """
     Timeline context manager. Within this context
@@ -207,7 +210,7 @@ class Timeline(Decorator):
         any adjustments due to :attr:`factor` or invocations
         of :meth:`freeze`, :meth:`rewind` or :meth:`forward`
         """
-        if not freeze_point is None:
+        if freeze_point is not None:
             return offset + freeze_point
         else:
             delta = self._get_original("time.time")() - self.reference
@@ -218,8 +221,8 @@ class Timeline(Decorator):
         ensures that the time that would be calculated based on any
         offset or freeze point would not result in jumping beyond the epoch
         """
-        next_time = self.__compute_time(freeze_point or self.freeze_point,
-                                      offset or self.offset
+        next_time = self.__compute_time(
+            freeze_point or self.freeze_point, offset or self.offset
         )
         if next_time < 0:
             raise TimeOutofBounds(next_time)
@@ -279,10 +282,10 @@ class Timeline(Decorator):
         """
         freezes the timeline
 
-        :param target_time: the time to freeze at as either a float representing
-            seconds since the epoch or a :class:`datetime.datetime` object.
-            If not provided time will be frozen at the current time of the
-            enclosing :class:`Timeline`
+        :param target_time: the time to freeze at as either a float
+          representing seconds since the epoch or a :class:`datetime.datetime`
+          object. If not provided time will be frozen at the current time of
+          the enclosing :class:`Timeline`
         """
         if target_time is None:
             freeze_point = self._get_fake("time.time")()
@@ -311,7 +314,6 @@ class Timeline(Decorator):
             self.reference = self._get_original("time.time")()
             self.offset = time_in_seconds(self.freeze_point) - self.reference
             self.freeze_point = None
-
 
     @chained
     def scale(self, factor):
@@ -347,18 +349,18 @@ class Timeline(Decorator):
 
             try:
                 for obj in mappings:
-                    if obj in dir(module) and getattr(module,
-                                                  obj) == self._get_original(
-                        obj):
+                    if (
+                        obj in dir(module)
+                        and getattr(module, obj) == self._get_original(obj)
+                    ):
                         path = "%s.%s" % (name, obj)
-                        if not path in self.mock_mappings:
+                        if path not in self.mock_mappings:
                             patcher = mock.patch(path, self._get_fake(obj))
                             patcher.start()
                             self.patchers.append(patcher)
             # this is done for cases where invalid modules are on
             # sys modules.
-            # pylint: disable=bare-except
-            except:
+            except:  # noqa: E722
                 BLACKLIST.add(module)
 
         for time_obj in self.mock_mappings:
@@ -397,8 +399,7 @@ class ScaledRunner(object):
                 self.segment.complete(
                     self.func(*self.func_args, **self.func_kwargs))
             # will be rethrown
-            # pylint: disable=bare-except
-            except:
+            except:  # noqa: E722
                 self.segment.complete_with_error(sys.exc_info())
         self.segment.complete_time = time.time()
 
@@ -412,7 +413,6 @@ class ScaledRunner(object):
         :raises: Exception if the :attr:`func` raised one during execution
         """
         return self.segment.response
-
 
     def get_execution_time(self):
         """
@@ -459,6 +459,7 @@ def run_sync(factor, func, *args, **kwargs):
 
     """
     return ScaledRunner(factor, func, *args, **kwargs)
+
 
 def run_async(factor, func, *args, **kwargs):
     """
