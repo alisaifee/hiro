@@ -1,4 +1,5 @@
 """
 module version
+
+Populated by versioneer during build
 """
-__version__ = "0.5.1"

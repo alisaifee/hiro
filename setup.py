@@ -8,7 +8,8 @@ __copyright__ = "Copyright 2013, Ali-Akber Saifee"
 
 from setuptools import setup
 import os
-import re
+
+import versioneer
 
 THIS_DIR = os.path.abspath(os.path.dirname(__file__))
 REQUIREMENTS = [
@@ -18,9 +19,6 @@ REQUIREMENTS = [
 ]
 
 extra = {}
-version = re.compile(r'__version__\s*=\s*"(.*?)"').findall(
-    open("hiro/version.py").read()
-)[0]
 
 setup(
     name='hiro',
@@ -30,7 +28,8 @@ setup(
     url="http://hiro.readthedocs.org",
     zip_safe=False,
     include_package_data=True,
-    version=version,
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     install_requires=list(REQUIREMENTS),
     classifiers=[k for k in open('CLASSIFIERS').read().split('\n') if k],
     description='time manipulation utilities for python',

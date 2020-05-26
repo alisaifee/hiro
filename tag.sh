@@ -1,13 +1,17 @@
 #!/bin/bash
-echo current version:$(python -c "import hiro.version;print(hiro.version.__version__)")
+dryrun=0
+while [ "$1" != "" ]; do
+    case $1 in
+        -d | --dryrun )    dryrun=1
+                           ;;
+    esac
+    shift
+done
+rm -rf build dist
+last_tag=$(git tag | sort -nr | head -n 1)
+echo current version:$(python setup.py --version), current tag: $last_tag
 read -p "new version:" new_version
-sed -i -e "s/__version__.*/__version__ = \"${new_version}\" # pragma: no cover/g" hiro/version.py
 echo "tagging $new_version"
-git add hiro/version.py
-git commit -m "updating version to ${new_version}"
-git tag -s $(python setup.py --version) -m "tagging version ${new_version}"
-rm -rf build/
-python setup.py build sdist bdist_egg
-twine upload dist/*
-
-
+git tag -s ${new_version} -m "tagging version ${new_version}"
+python setup.py build sdist bdist_egg bdist_wheel
+test $dryrun != 1 && twine upload dist/*
