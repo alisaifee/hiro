@@ -10,9 +10,9 @@
     :target: https://hiro.readthedocs.org
 
 
-*********************************************
-Hiro - time manipulation utilities for python
-*********************************************
+********************************************************
+Hiro - time manipulation utilities for testing in python
+********************************************************
 |ci| |coveralls| |pypi| |docs| |license|
 
    Yatta!

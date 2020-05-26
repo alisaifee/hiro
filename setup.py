@@ -32,7 +32,7 @@ setup(
     cmdclass=versioneer.get_cmdclass(),
     install_requires=list(REQUIREMENTS),
     classifiers=[k for k in open('CLASSIFIERS').read().split('\n') if k],
-    description='time manipulation utilities for python',
+    description='time manipulation utilities for testing in python',
     long_description=open('README.rst').read() + open('HISTORY.rst').read(),
     packages=["hiro"]
 )

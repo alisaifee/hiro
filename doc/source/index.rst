@@ -1,7 +1,7 @@
 
-#############################################
-Hiro - time manipulation utilities for python
-#############################################
+########################################################
+Hiro - time manipulation utilities for testing in python
+########################################################
 
 Often testing code that can be time dependent can become either fragile or
 slow. Hiro provides context managers and utilities to either freeze, accelerate
