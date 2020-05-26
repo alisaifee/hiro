@@ -25,6 +25,7 @@ def test_passthrough():
     assert time_in_seconds(long_instance) == long_instance
     assert time_in_seconds(1.0) == 1.0
 
+
 def test_date():
     d = datetime.date(1970, 1, 1)
     assert time_in_seconds(d) == 0
@@ -32,13 +33,16 @@ def test_date():
     d = d + datetime.timedelta(days=1234)
     assert time_in_seconds(d) == 1234 * 24 * 60 * 60
 
+
 def test_datetime():
     d = datetime.datetime(1970, 1, 1, 0, 0, 0)
     assert time_in_seconds(d) == time.mktime(d.timetuple())
 
+
 def test_tzaware_datetime():
     d = datetime.datetime(1970, 1, 1, 0, 0, 0, tzinfo=utc)
     assert time_in_seconds(d) == 0
+
 
 def test_invalid_type():
     with pytest.raises(InvalidTypeError):

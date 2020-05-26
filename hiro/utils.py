@@ -26,6 +26,7 @@ else:
 
     utc = UTC()
 
+
 def timedelta_to_seconds(delta):
     """
     converts a timedelta object to seconds
