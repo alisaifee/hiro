@@ -1,5 +1,5 @@
-.. |travis| image:: https://img.shields.io/travis/alisaifee/hiro/master.svg?style=flat-square
-    :target: https://travis-ci.org/alisaifee/hiro?branch=master
+.. |ci| image:: https://github.com/alisaifee/hiro/workflows/CI/badge.svg?branch=master
+    :target: https://github.com/alisaifee/hiro/actions?query=branch%3Amaster+workflow%3ACI
 .. |coveralls| image:: https://img.shields.io/coveralls/alisaifee/hiro/master.svg?style=flat-square
     :target: https://coveralls.io/r/alisaifee/hiro?branch=master
 .. |license| image:: https://img.shields.io/pypi/l/hiro.svg?style=flat-square
@@ -11,7 +11,7 @@
 *********************************************
 Hiro - time manipulation utilities for python
 *********************************************
-|travis| |coveralls| |pypi| |license|
+|ci| |coveralls| |pypi| |license|
 
    Yatta!
 
@@ -168,7 +168,7 @@ Example
     runner = hiro.run_sync(10, _slow_function, 10)
     runner.get_response()
     # OUT: 10
-    
+
     # due to the scale factor 10 it only took 1s to execute
     runner.get_execution_time()
     # OUT: 1.1052658557891846
