@@ -1,9 +1,11 @@
 [run]
-include = 
+include =
     **/hiro/**
-omit = 
+omit =
+    /*/hiro/_version*
     **/hiro/tests/**
     **/setup.py
+    versioneer.py
 [report]
 exclude_lines =
     pragma: no cover
