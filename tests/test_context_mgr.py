@@ -174,11 +174,8 @@ def test_freeze_forward_unfreeze():
         # sleep 10 seconds
         time.sleep(10)
         # ensure post unfreeze, time moves
-        assert round(
-            abs(
-                (datetime.now() - datetime(2012, 12, 12, 1, 0, 0)).seconds - 10
-            ), 7
-        ) == 0
+        assert (datetime.now() - datetime(2012, 12, 12, 1, 0, 0)).seconds >= 10
+
         # ensure post unfreeze, forward operations work
         test_timeline.forward(timedelta(hours=2))
         assert int(
