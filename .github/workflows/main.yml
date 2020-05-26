@@ -12,7 +12,16 @@ jobs:
     strategy:
       matrix:
         python-version: [2.7, pypy2, 3.5, 3.7, 3.8, pypy3]
-        timezone: ["UTC", "Europe/Paris", "Asia/Hong_Kong"]
+        timezone: ["UTC"]
+        include:
+          - python-version: 3.8
+            timezone: 'Europe/Paris'
+          - python-version: 3.8
+            timezone: 'Asia/Hong_Kong'
+          - python-version: 2.7
+            timezone: 'Europe/Paris'
+          - python-version: 2.7
+            timezone: 'Asia/Hong_Kong'
     steps:
     - uses: actions/checkout@v2
     - name: Cache dependencies
