@@ -9,8 +9,12 @@ or decelerate and jump between different points in time. Functions exposed by th
 standard library's ``time``, ``datetime`` and ``date`` modules are patched within
 the the contexts exposed.
 
+
+.. include:: intro.rst
+
 .. toctree::
     :maxdepth: 4
+    :hidden:
 
     intro
     api

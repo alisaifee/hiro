@@ -5,23 +5,14 @@ Project resources
 .. only:: html
 
     - Source : `Github`_
-    - Continuous Integration: |travis|
-    - Test coverage: |coveralls| 
-    - PyPi: |crate| / `pypi <https://pypi.python.org/pypi/hiro>`_
-
-.. only:: latex
-
-    - Source : `Github`_
-    - Continuous Integration: `Travis-CI <https://travis-ci.org/alisaifee/hiro>`_
-    - Test coverage: `Coveralls <https://coveralls.io/r/alisaifee/hiro>`_
-    - PyPi: `pypi <https://pypi.python.org/pypi/hiro>`_
-
+    - Continuous Integration: |ci|
+    - Test coverage: |coveralls|
+    - PyPi: |crate|
 
 .. _Github: http://github.com/alisaifee/hiro
 
-.. |travis| image:: https://travis-ci.org/alisaifee/hiro.png?branch=master
-    :target: https://travis-ci.org/alisaifee/hiro
-    :alt: Travis-CI
+.. |ci| image:: https://github.com/alisaifee/hiro/workflows/CI/badge.svg?branch=master
+    :target: https://github.com/alisaifee/hiro/actions?query=branch%3Amaster+workflow%3ACI
 
 .. |coveralls| image:: https://coveralls.io/repos/alisaifee/hiro/badge.png?branch=master
     :target: https://coveralls.io/r/alisaifee/hiro?branch=master
@@ -33,4 +24,4 @@ Project resources
 
 .. note::
 
-    Hiro is tested on pythons version 2.6, 2.7, 3.2, 3.3, 3.4 and pypy >= 2.1
+    Hiro is tested on pythons version 2.7, 3.5, 3.7, 3.8 and pypy
