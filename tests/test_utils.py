@@ -1,9 +1,11 @@
 import datetime
 import six
+import time
+
+import pytest
 
 from hiro.errors import InvalidTypeError
-from hiro.utils import timedelta_to_seconds, time_in_seconds, chained
-import pytest
+from hiro.utils import timedelta_to_seconds, time_in_seconds, chained, utc
 
 
 def test_fractional():
@@ -28,9 +30,17 @@ def test_date():
     d = datetime.date(1970, 1, 1)
     assert time_in_seconds(d) == 0
 
+    d = d + datetime.timedelta(days=1234)
+    assert time_in_seconds(d) == 1234 * 24 * 60 * 60
+
 
 def test_datetime():
     d = datetime.datetime(1970, 1, 1, 0, 0, 0)
+    assert time_in_seconds(d) == time.mktime(d.timetuple())
+
+
+def test_tzaware_datetime():
+    d = datetime.datetime(1970, 1, 1, 0, 0, 0, tzinfo=utc)
     assert time_in_seconds(d) == 0
 
 
