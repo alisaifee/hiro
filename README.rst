@@ -6,12 +6,14 @@
     :target: https://pypi.python.org/pypi/hiro
 .. |pypi| image:: https://img.shields.io/pypi/v/hiro.svg?style=flat-square
     :target: https://pypi.python.org/pypi/hiro
+.. |docs| image:: https://readthedocs.org/projects/hiro/badge
+    :target: https://hiro.readthedocs.org
 
 
 *********************************************
 Hiro - time manipulation utilities for python
 *********************************************
-|ci| |coveralls| |pypi| |license|
+|ci| |coveralls| |pypi| |docs| |license|
 
    Yatta!
 
