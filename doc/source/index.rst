@@ -15,3 +15,4 @@ the the contexts exposed.
     intro
     api
     project
+    changelog
