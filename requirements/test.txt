@@ -1,3 +1,4 @@
 -r main.txt
 pytest
 pytest-cov
+importlib_metadata<5
