@@ -5,8 +5,9 @@ Hiro context manager and utilities
 Timeline context
 ================
 The :class:`~hiro.Timeline` context manager hijacks a few commonly used time functions
-to allow time manipulation within its context. Specifically :func:`~time.sleep`, :func:`~time.time`,
-:func:`~time.gmtime`, :meth:`~datetime.datetime.now`, :meth:`~datetime.datetime.utcnow` and :meth:`~datetime.datetime.today`
+to allow time manipulation within its context. Specifically :func:`~time.sleep`, :func:`~time.time`, :func:`time.time_ns`,
+:func:`~time.monotonic`, :func:`time.monotonic_ns`, :func:`time.localtime`, :func:`~time.gmtime`,
+:meth:`datetime.datetime.now`, :meth:`datetime.datetime.utcnow` and :meth:`datetime.datetime.today`
 behave according the configuration of the context.
 
 The context provides the following manipulation options:
