@@ -3,6 +3,13 @@
 Changelog
 =========
 
+v1.1.1
+------
+Release Date: 2023-01-11
+
+Chore:
+  * Fix github release action
+
 v1.1.0
 ------
 Release Date: 2023-01-11
@@ -103,6 +110,7 @@ v0.0.1
 Release Date: 2013-11-30
 
 Initial Release
+
 
 
 
