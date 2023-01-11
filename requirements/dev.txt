@@ -1,5 +1,8 @@
 -r test.txt
 -r docs.txt
+autoflake8
+black
+isort
 flake8
 keyring
 sphinx-autobuild
