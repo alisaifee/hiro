@@ -34,7 +34,7 @@ def test_scale_up_async_runner():
     def _slow_func():
         time.sleep(1)
 
-    f = hiro.run_async(4, _slow_func)
+    f = hiro.run_threaded(4, _slow_func)
     assert f.is_running()
     f.join()
     assert f.get_execution_time() < 1
@@ -45,7 +45,7 @@ def test_scale_up_async_runner_fail():
         time.sleep(1)
         raise Exception("foo")
 
-    f = hiro.run_async(4, _slow_func)
+    f = hiro.run_threaded(4, _slow_func)
     assert f.is_running()
     f.join()
     with pytest.raises(Exception):
@@ -58,7 +58,7 @@ def test_segment_not_complete_error():
         time.sleep(1)
         raise Exception("foo")
 
-    f = hiro.run_async(4, _slow_func)
+    f = hiro.run_threaded(4, _slow_func)
     with pytest.raises(SegmentNotComplete):
         f.get_execution_time()
     with pytest.raises(SegmentNotComplete):

@@ -36,6 +36,7 @@ class Decorator:
 
             if not catch and exc is not _NO_EXCEPTION:
                 raise exc[0]
+
             return result
 
         return inner
@@ -70,6 +71,7 @@ class Segment:
         """
         returns the completion time
         """
+
         return self.__end
 
     @complete_time.setter
@@ -84,6 +86,7 @@ class Segment:
         """
         returns the start time
         """
+
         return self.__start
 
     @start_time.setter
@@ -98,6 +101,7 @@ class Segment:
         """
         returns the total execution time of the segment
         """
+
         if self.__end:
             return self.complete_time - self.start_time
         else:
@@ -109,11 +113,13 @@ class Segment:
         returns the return value captured in the segment or raises
         the :exception:`exceptions.Exception` that was caught.
         """
+
         if not self.__end:
             raise SegmentNotComplete
         else:
             if self.__error:
                 raise self.__error[0]
+
             return self.__response
 
 
@@ -184,6 +190,7 @@ class Timeline(Decorator):
         """
         returns the original moduel or function
         """
+
         if fn_or_mod in self.mock_mappings:
             return self.mock_mappings[fn_or_mod][0]
         elif fn_or_mod in self.func_mappings:
@@ -195,6 +202,7 @@ class Timeline(Decorator):
         """
         returns the mocked/patched module or function
         """
+
         if fn_or_mod in self.mock_mappings:
             return self.mock_mappings[fn_or_mod][1]
         elif fn_or_mod in self.func_mappings:
@@ -208,10 +216,12 @@ class Timeline(Decorator):
         any adjustments due to :attr:`factor` or invocations
         of :meth:`freeze`, :meth:`rewind` or :meth:`forward`
         """
+
         if freeze_point is not None:
             return offset + freeze_point
         else:
             delta = self._get_original("time.time")() - self.reference
+
             return self.reference + (delta * self.factor) + offset
 
     def __check_out_of_bounds(self, offset=None, freeze_point=None):
@@ -222,6 +232,7 @@ class Timeline(Decorator):
         next_time = self.__compute_time(
             freeze_point or self.freeze_point, offset or self.offset
         )
+
         if next_time < 0:
             raise TimeOutofBounds(next_time)
 
@@ -229,12 +240,14 @@ class Timeline(Decorator):
         """
         patched version of :func:`time.time`
         """
+
         return self.__compute_time(self.freeze_point, self.offset)
 
     def __time_gmtime(self, seconds=None):
         """
         patched version of :func:`time.gmtime`
         """
+
         return self._get_original("time.gmtime")(seconds or self.__time_time())
 
     def __time_sleep(self, amount):
@@ -252,6 +265,7 @@ class Timeline(Decorator):
          a :class:`datetime.timedelta` object
         """
         offset = self.offset
+
         if isinstance(amount, datetime.timedelta):
             offset += timedelta_to_seconds(amount)
         else:
@@ -268,6 +282,7 @@ class Timeline(Decorator):
          a :class:`datetime.timedelta` object
         """
         offset = self.offset
+
         if isinstance(amount, datetime.timedelta):
             offset -= timedelta_to_seconds(amount)
         else:
@@ -285,6 +300,7 @@ class Timeline(Decorator):
           object. If not provided time will be frozen at the current time of
           the enclosing :class:`Timeline`
         """
+
         if target_time is None:
             freeze_point = self._get_fake("time.time")()
         else:
@@ -308,6 +324,7 @@ class Timeline(Decorator):
             a checkpoint mechanism.
 
         """
+
         if self.freeze_point is not None:
             self.reference = self._get_original("time.time")()
             self.offset = time_in_seconds(self.freeze_point) - self.reference
@@ -340,6 +357,7 @@ class Timeline(Decorator):
     def __enter__(self):
         for name in list(sys.modules.keys()):
             module = sys.modules[name]
+
             if module in BLACKLIST:
                 continue
             mappings = copy.copy(self.class_mappings)
@@ -351,6 +369,7 @@ class Timeline(Decorator):
                         module, obj
                     ) == self._get_original(obj):
                         path = "{}.{}".format(name, obj)
+
                         if path not in self.mock_mappings:
                             patcher = mock.patch(path, self._get_fake(obj))
                             patcher.start()
@@ -402,6 +421,7 @@ class ScaledRunner:
 
     def __call__(self):
         self._run()
+
         return self
 
     def get_response(self):
@@ -409,18 +429,20 @@ class ScaledRunner:
         :returns: the return value from :attr:`func`
         :raises: Exception if the :attr:`func` raised one during execution
         """
+
         return self.segment.response
 
     def get_execution_time(self):
         """
         :returns: the real execution time of :attr:`func` in seconds
         """
+
         return self.segment.runtime
 
 
-class ScaledAsyncRunner(ScaledRunner):
+class ScaledThreadedRunner(ScaledRunner):
     """
-    manages the asynchronous execution of a callable within a
+    manages the threaded execution of a callable within a
     :class:`hiro.Timeline` context.
     """
 
@@ -430,18 +452,21 @@ class ScaledAsyncRunner(ScaledRunner):
 
     def __call__(self):
         self.thread_runner.start()
+
         return self
 
     def is_running(self):
         """
         :rtype bool: whether the :attr:`func` is still running or not.
         """
+
         return self.thread_runner.is_alive()
 
     def join(self):
         """
         waits for the :attr:`func` to complete execution.
         """
+
         return self.thread_runner.join()
 
 
@@ -456,12 +481,31 @@ def run_sync(factor, func, *args, **kwargs):
     :returns: an instance of :class:`hiro.core.ScaledRunner`
 
     """
+
     return ScaledRunner(factor, func, *args, **kwargs)
+
+
+def run_threaded(factor, func, *args, **kwargs):
+    """
+    Executes a callable in a separate thread within a :class:`hiro.Timeline`
+
+    :param int factor: scale factor to use for the timeline during execution
+    :param function func: the function to invoke
+    :param args: the arguments to pass to the function
+    :param kwargs: the keyword arguments to pass to the function
+    :returns: an instance of :class:`hiro.core.ScaledThreadedRunner`
+
+    """
+
+    return ScaledThreadedRunner(factor, func, *args, **kwargs)
+
+
+# For backward compatibility
 
 
 def run_async(factor, func, *args, **kwargs):
     """
-    Asynchronously executes a callable within a :class:`hiro.Timeline`
+    Executes a callable in a separate thread within a :class:`hiro.Timeline`
 
     :param int factor: scale factor to use for the timeline during execution
     :param function func: the function to invoke
@@ -469,5 +513,11 @@ def run_async(factor, func, *args, **kwargs):
     :param kwargs: the keyword arguments to pass to the function
     :returns: an instance of :class:`hiro.core.ScaledAsyncRunner`
 
+    .. deprecated:: 1.0.0
+       Use :meth:`run_threaded`
+
     """
-    return ScaledAsyncRunner(factor, func, *args, **kwargs)
+    return run_threaded(factor, func, *args, **kwargs)
+
+
+ScaledAsyncRunner = ScaledThreadedRunner
