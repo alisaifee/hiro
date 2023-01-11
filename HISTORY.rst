@@ -3,6 +3,20 @@
 Changelog
 =========
 
+v1.0.0
+------
+Release Date: 2023-01-10
+
+Compatibility:
+
+  * Drop support for python < 3.7
+  * Update sources to not need six for compatibility
+
+Chores:
+  * Standardize linting
+  * Add Asia/Shanghai to CI matrix
+
+
 v0.5.1
 ------
 Release Date: 2019-10-10
@@ -62,4 +76,5 @@ v0.0.1
 Release Date: 2013-11-30
 
 Initial Release
+
 
