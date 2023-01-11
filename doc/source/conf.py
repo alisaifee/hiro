@@ -26,7 +26,7 @@ html_static_path = ['_static']
 # -- Project information -----------------------------------------------------
 
 project = 'hiro'
-copyright = '2020, Ali-Akber Saifee'
+copyright = '2023, Ali-Akber Saifee'
 author = 'Ali-Akber Saifee'
 version = hiro.__version__
 release = hiro.__version__
