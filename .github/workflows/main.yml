@@ -116,11 +116,6 @@ jobs:
         with:
           name: artifact
           path: dist
-      - name: Download benchmark results
-        uses: actions/download-artifact@v2
-        with:
-          name: benchmark
-          path: .benchmarks
       - name: Generate release notes
         run: |
           ./scripts/github_release_notes.sh > release_notes.md
