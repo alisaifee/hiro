@@ -3,6 +3,14 @@
 Changelog
 =========
 
+v1.0.1
+------
+Release Date: 2023-01-11
+
+Compatibility:
+
+  * Update package classifiers to reflect python version support
+
 v1.0.0
 ------
 Release Date: 2023-01-10
@@ -76,5 +84,6 @@ v0.0.1
 Release Date: 2013-11-30
 
 Initial Release
+
 
 
