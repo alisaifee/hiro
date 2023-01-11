@@ -3,6 +3,13 @@
 Changelog
 =========
 
+v1.0.2
+------
+Release Date: 2023-01-11
+
+Chores:
+  * Update documentation theme
+
 v1.0.1
 ------
 Release Date: 2023-01-11
@@ -81,6 +88,7 @@ v0.0.1
 Release Date: 2013-11-30
 
 Initial Release
+
 
 
 
