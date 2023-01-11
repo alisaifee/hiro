@@ -7,7 +7,7 @@ Project resources
     - Source : `Github`_
     - Continuous Integration: |ci|
     - Test coverage: |coveralls|
-    - PyPi: |crate|
+    - PyPi: |pypi|
 
 .. _Github: http://github.com/alisaifee/hiro
 
@@ -18,10 +18,7 @@ Project resources
     :target: https://coveralls.io/r/alisaifee/hiro?branch=master
     :alt: Coveralls
 
-.. |crate| image:: https://pypip.in/v/hiro/badge.png
-    :target: https://crate.io/packages/hiro/
-    :alt: pypi
+.. |pypi| image:: https://img.shields.io/pypi/v/hiro.svg?style=flat-square
+    :target: https://pypi.python.org/pypi/hiro
 
-.. note::
-
-    Hiro is tested on pythons version 3.7-3.11 and pypy 3.9
+.. note:: Hiro is tested on pythons version 3.7-3.11 and pypy 3.9
