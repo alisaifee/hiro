@@ -1,5 +1,5 @@
 import datetime
-from time import time, gmtime, sleep
+from time import gmtime, sleep, time
 
 from . import sub_module_3
 

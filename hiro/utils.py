@@ -4,14 +4,17 @@ random utility functions
 import calendar
 import datetime
 import functools
-import six
 import time
+
+import six
+
 from .errors import InvalidTypeError
 
 # Python2 doesn't have the UTC tzinfo object. Backport it from Python3.
-if hasattr(datetime, 'timezone'):
+if hasattr(datetime, "timezone"):
     utc = datetime.timezone.utc
 else:
+
     class UTC(datetime.tzinfo):
         """UTC"""
 
@@ -32,8 +35,8 @@ def timedelta_to_seconds(delta):
     converts a timedelta object to seconds
     """
     seconds = delta.microseconds
-    seconds += (delta.seconds + delta.days * 24 * 3600) * 10 ** 6
-    return float(seconds) / 10 ** 6
+    seconds += (delta.seconds + delta.days * 24 * 3600) * 10**6
+    return float(seconds) / 10**6
 
 
 def time_in_seconds(value):
@@ -53,15 +56,11 @@ def time_in_seconds(value):
         if value.tzinfo is None:
             return time.mktime(value.timetuple())
         else:
-            return calendar.timegm(
-                value.astimezone(utc).timetuple()
-            )
+            return calendar.timegm(value.astimezone(utc).timetuple())
     elif isinstance(value, datetime.date):
         # We're really explicit here but we could just use value.timetuple()
         return calendar.timegm(
-            datetime.datetime.combine(
-                value, datetime.time(0, 0, 0, 0, utc)
-            ).timetuple()
+            datetime.datetime.combine(value, datetime.time(0, 0, 0, 0, utc)).timetuple()
         )
     else:
         raise InvalidTypeError(value)
@@ -74,6 +73,7 @@ def chained(method):
     adopted from:
     http://www.snip2code.com/Snippet/2535/Fluent-interface-decorators
     """
+
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
         """
@@ -81,4 +81,5 @@ def chained(method):
         """
         result = method(self, *args, **kwargs)
         return self if result is None else result
+
     return wrapper

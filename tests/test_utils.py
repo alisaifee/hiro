@@ -1,11 +1,11 @@
 import datetime
-import six
 import time
 
 import pytest
+import six
 
 from hiro.errors import InvalidTypeError
-from hiro.utils import timedelta_to_seconds, time_in_seconds, chained, utc
+from hiro.utils import chained, time_in_seconds, timedelta_to_seconds, utc
 
 
 def test_fractional():

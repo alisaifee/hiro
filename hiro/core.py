@@ -2,19 +2,19 @@
 timeline & runner implementation
 """
 import copy
+import datetime
 import inspect
-
 import sys
 import threading
 import time
-import datetime
-from six import reraise
+from functools import wraps
 
 import mock
-from functools import wraps
+from six import reraise
+
 from .errors import SegmentNotComplete, TimeOutofBounds
-from .utils import timedelta_to_seconds, chained, time_in_seconds
 from .patches import Date, Datetime
+from .utils import chained, time_in_seconds, timedelta_to_seconds
 
 BLACKLIST = set()
 _NO_EXCEPTION = (None, None, None)
@@ -160,7 +160,7 @@ class Timeline(Decorator):
 
     class_mappings = {
         "date": (datetime.date, Date),
-        "datetime": (datetime.datetime, Datetime)
+        "datetime": (datetime.datetime, Datetime),
     }
 
     def __init__(self, scale=1, start=None):
@@ -173,12 +173,12 @@ class Timeline(Decorator):
             "datetime.datetime": (datetime.datetime, Datetime),
             "time.time": (time.time, self.__time_time),
             "time.sleep": (time.sleep, self.__time_sleep),
-            "time.gmtime": (time.gmtime, self.__time_gmtime)
+            "time.gmtime": (time.gmtime, self.__time_gmtime),
         }
         self.func_mappings = {
             "time": (time.time, self.__time_time),
             "sleep": (time.sleep, self.__time_sleep),
-            "gmtime": (time.gmtime, self.__time_gmtime)
+            "gmtime": (time.gmtime, self.__time_gmtime),
         }
         self.factor = scale
 
@@ -349,10 +349,9 @@ class Timeline(Decorator):
 
             try:
                 for obj in mappings:
-                    if (
-                        obj in dir(module)
-                        and getattr(module, obj) == self._get_original(obj)
-                    ):
+                    if obj in dir(module) and getattr(
+                        module, obj
+                    ) == self._get_original(obj):
                         path = "%s.%s" % (name, obj)
                         if path not in self.mock_mappings:
                             patcher = mock.patch(path, self._get_fake(obj))
@@ -381,6 +380,7 @@ class ScaledRunner(object):
     manages the execution of a callable within a :class:`hiro.Timeline`
     context.
     """
+
     def __init__(self, factor, func, *args, **kwargs):
         self.func = func
         self.func_args = args
@@ -396,8 +396,7 @@ class ScaledRunner(object):
         self.segment.start_time = time.time()
         with Timeline(scale=self.factor):
             try:
-                self.segment.complete(
-                    self.func(*self.func_args, **self.func_kwargs))
+                self.segment.complete(self.func(*self.func_args, **self.func_kwargs))
             # will be rethrown
             except:  # noqa: E722
                 self.segment.complete_with_error(sys.exc_info())
@@ -426,6 +425,7 @@ class ScaledAsyncRunner(ScaledRunner):
     manages the asynchronous execution of a callable within a
     :class:`hiro.Timeline` context.
     """
+
     def __init__(self, *args, **kwargs):
         self.thread_runner = threading.Thread(target=self._run)
         super(ScaledAsyncRunner, self).__init__(*args, **kwargs)

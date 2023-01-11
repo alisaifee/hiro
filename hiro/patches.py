@@ -2,9 +2,10 @@
 patched builtin time classes for use by :class:`hiro.Timeline`
 """
 import abc
+import time
 from datetime import date as realdate
 from datetime import datetime as realdatetime
-import time
+
 import six
 
 
@@ -14,6 +15,7 @@ class DatetimeMeta(abc.ABCMeta):
     objects create inside the :class:`hiro.Timeline` with those created
     outside it.
     """
+
     def __instancecheck__(cls, instance):
         return isinstance(instance, realdatetime)
 
@@ -24,6 +26,7 @@ class DateMeta(type):
     objects create inside the :class:`hiro.Timeline` with those created
     outside it.
     """
+
     def __instancecheck__(cls, instance):
         return isinstance(instance, realdate)
 
@@ -50,6 +53,7 @@ class Date(realdate):
     used to patch :class:`datetime.date` to follow the rules of the
     parent :class:`hiro.Timeline`
     """
+
     __metaclass__ = DateMeta
 
     @classmethod

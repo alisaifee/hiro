@@ -1,8 +1,8 @@
 """
 
 """
-from datetime import datetime, date
-from time import time, sleep, gmtime
+from datetime import date, datetime
+from time import gmtime, sleep, time
 
 
 def sub_sample_3_1_now():

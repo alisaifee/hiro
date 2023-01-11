@@ -1,13 +1,14 @@
+import math
 import os
 import time
-from datetime import datetime, date, timedelta
-import math
+from datetime import date, datetime, timedelta
+
 import mock
+import pytest
 
 from hiro import Timeline
 from hiro.utils import timedelta_to_seconds
 from tests.emulated_modules import sample_1, sample_2, sample_3
-import pytest
 
 
 def test_accelerate():
@@ -38,9 +39,7 @@ def test_utc():
     start_utc = datetime.utcnow()
     with Timeline(100000):
         time.sleep(60 * 60)
-        future_diff = (
-            (datetime.now() - datetime.utcnow()).seconds / 60.0 / 60.0
-        )
+        future_diff = (datetime.now() - datetime.utcnow()).seconds / 60.0 / 60.0
         start_diff = (start_local - start_utc).seconds / 60.0 / 60.0
         assert math.ceil(future_diff) == math.ceil(start_diff)
 
@@ -65,7 +64,7 @@ def test_rewind():
         timeline.forward(timedelta(days=1))
         assert (original_day - date.today()).days == 0
         timeline.rewind(timedelta(days=1))
-        amount = (original_datetime - datetime.now())
+        amount = original_datetime - datetime.now()
         amount_seconds = timedelta_to_seconds(amount)
         assert int(amount_seconds) >= 86399, amount_seconds
 
@@ -75,7 +74,7 @@ def test_freeze():
         timeline.freeze()
         originals = (
             sample_1.sub_module_1.sub_sample_1_1_time(),
-            sample_1.sub_module_1.sub_sample_1_1_now()
+            sample_1.sub_module_1.sub_sample_1_1_now(),
         )
         time.sleep(1)
         assert time.time() == originals[0]
@@ -84,7 +83,7 @@ def test_freeze():
         timeline.freeze()
         originals = (
             sample_2.sub_module_2.sub_sample_2_1_time(),
-            sample_2.sub_module_2.sub_sample_2_1_now()
+            sample_2.sub_module_2.sub_sample_2_1_now(),
         )
         time.sleep(1)
         assert time.time() == originals[0]
@@ -94,7 +93,7 @@ def test_freeze():
         originals = (
             sample_3.sub_module_3.sub_sample_3_1_time(),
             sample_3.sub_module_3.sub_sample_3_1_now(),
-            sample_3.sub_module_3.sub_sample_3_1_gmtime()
+            sample_3.sub_module_3.sub_sample_3_1_gmtime(),
         )
         time.sleep(1)
         assert time.time() == originals[0]
@@ -134,9 +133,7 @@ def test_unfreeze():
         timeline.forward(timedelta(minutes=2))
         assert int(time.time()) == 121
         timeline.reset()
-        assert (
-            int(time.time()) - int(os.popen("date +%s").read().strip())
-        ) <= 1
+        assert (int(time.time()) - int(os.popen("date +%s").read().strip())) <= 1
         timeline.forward(timedelta(days=1))
         assert (date.today() - real_day).days == 1
 
@@ -144,33 +141,34 @@ def test_unfreeze():
 def test_freeze_forward_unfreeze():
 
     # start at 2012/12/12 0:0:0
-    test_timeline = Timeline(
-        scale=100, start=datetime(2012, 12, 12, 0, 0, 0)
-    )
+    test_timeline = Timeline(scale=100, start=datetime(2012, 12, 12, 0, 0, 0))
 
     # jump forward an hour and freeze
     with test_timeline.forward(60 * 60).freeze():
-        assert round(
-            abs(
-                (datetime.now() - datetime(2012, 12, 12, 1, 0, 0)).seconds - 0
-            ), 7
-        ) == 0
+        assert (
+            round(
+                abs((datetime.now() - datetime(2012, 12, 12, 1, 0, 0)).seconds - 0), 7
+            )
+            == 0
+        )
         # sleep 10 seconds
         time.sleep(10)
         # assert no changes
-        assert round(
-            abs(
-                (datetime.now() - datetime(2012, 12, 12, 1, 0, 0)).seconds - 0
-            ), 7
-        ) == 0
+        assert (
+            round(
+                abs((datetime.now() - datetime(2012, 12, 12, 1, 0, 0)).seconds - 0), 7
+            )
+            == 0
+        )
         # unfreeze timeline
         test_timeline.unfreeze()
         # ensure unfreeze was at the original freeze point
-        assert round(
-            abs(
-                (datetime.now() - datetime(2012, 12, 12, 1, 0, 0)).seconds - 0
-            ), 7
-        ) == 0
+        assert (
+            round(
+                abs((datetime.now() - datetime(2012, 12, 12, 1, 0, 0)).seconds - 0), 7
+            )
+            == 0
+        )
         # sleep 10 seconds
         time.sleep(10)
         # ensure post unfreeze, time moves
@@ -178,9 +176,9 @@ def test_freeze_forward_unfreeze():
 
         # ensure post unfreeze, forward operations work
         test_timeline.forward(timedelta(hours=2))
-        assert int(
-            (datetime.now() - datetime(2012, 12, 12, 1, 0, 0)).seconds / 3600
-        ) == 2
+        assert (
+            int((datetime.now() - datetime(2012, 12, 12, 1, 0, 0)).seconds / 3600) == 2
+        )
         # reset everything
         test_timeline.reset()
         assert int(time.time()) == int(os.popen("date +%s").read().strip())
@@ -203,19 +201,22 @@ def test_decorated():
     def _decorated():
         time.sleep(10)
         assert int(timedelta_to_seconds(datetime.now() - start)) >= 10
+
     _decorated()
-    assert ((datetime.now() - real_start).seconds < 10)
+    assert (datetime.now() - real_start).seconds < 10
 
 
 def test_decorated_with_argument():
     @Timeline()
     def _decorated(timeline):
         assert isinstance(timeline, Timeline)
+
     _decorated()
 
     @Timeline()
     def _decorated(timeline=None):
         assert isinstance(timeline, Timeline)
+
     _decorated()
 
 
@@ -231,14 +232,11 @@ def test_decorated_exception():
         _decorated()
 
 
-@mock.patch('hiro.core.BLACKLIST', new_callable=set)
+@mock.patch("hiro.core.BLACKLIST", new_callable=set)
 def test_patch_blacklist(BLACKLIST):
-    hiro_dummy_module = mock.MagicMock(
-        __dir__=mock.MagicMock(side_effect=Exception))
+    hiro_dummy_module = mock.MagicMock(__dir__=mock.MagicMock(side_effect=Exception))
 
-    with mock.patch.dict(
-        'sys.modules', {'hiro_dummy_module': hiro_dummy_module}
-    ):
+    with mock.patch.dict("sys.modules", {"hiro_dummy_module": hiro_dummy_module}):
         with Timeline().freeze():
             pass
 

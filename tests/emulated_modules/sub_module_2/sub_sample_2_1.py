@@ -1,8 +1,8 @@
 """
 
 """
-from datetime import datetime, date
 import time
+from datetime import date, datetime
 
 
 def sub_sample_2_1_now():
