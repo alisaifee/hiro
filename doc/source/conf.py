@@ -49,6 +49,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
+    "sphinx_paramlinks",
     'sphinx.ext.viewcode'
 ]
 # Add any paths that contain templates here, relative to this directory.
@@ -59,4 +60,6 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
-
+intersphinx_mapping = {
+    "python": ("http://docs.python.org/", None)
+}

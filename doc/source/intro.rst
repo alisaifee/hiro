@@ -4,19 +4,19 @@ Hiro context manager and utilities
 
 Timeline context
 ================
-The :class:`hiro.Timeline` context manager hijacks a few commonly used time functions
-to allow time manipulation within its context. Specifically :func:`time.sleep`, :func:`time.time`,
-:func:`time.gmtime`, :meth:`datetime.datetime.now`, :meth:`datetime.datetime.utcnow` and :meth:`datetime.datetime.today`
+The :class:`~hiro.Timeline` context manager hijacks a few commonly used time functions
+to allow time manipulation within its context. Specifically :func:`~time.sleep`, :func:`~time.time`,
+:func:`~time.gmtime`, :meth:`~datetime.datetime.now`, :meth:`~datetime.datetime.utcnow` and :meth:`~datetime.datetime.today`
 behave according the configuration of the context.
 
 The context provides the following manipulation options:
 
-* ``rewind``: accepts seconds as an integer or a ``timedelta`` object.
-* ``forward``: accepts seconds as an integer or a ``timedelta`` object.
-* ``freeze``: accepts a floating point time since epoch or ``datetime`` or ``date`` object to freeze the time at.
-* ``unfreeze``: resumes time from the point it was frozen at.
-* ``scale``: accepts a floating point to accelerate/decelerate time by. ``> 1 = acceleration,  < 1 = deceleration``
-* ``reset``: resets all time alterations.
+* :meth:`~hiro.Timeline.rewind`: accepts seconds as an integer or an :class:`~datetime.timedelta` instance.
+* :meth:`~hiro.Timeline.forward`: accepts seconds as an integer or an :class:`~datetime.timedelta` instance.
+* :meth:`~hiro.Timeline.freeze`: accepts a floating point time since epoch or a :class:`~datetime.datetime` or :class:`~datetime.date` instance to freeze the time at.
+* :meth:`~hiro.Timeline.unfreeze`: resumes time from the point it was frozen at.
+* :meth:`~hiro.Timeline.scale`: accepts a floating point to accelerate/decelerate time by. ``> 1 = acceleration,  < 1 = deceleration``
+* :meth:`~hiro.Timeline.reset`: resets all time alterations.
 
 .. code-block:: python
 
@@ -87,8 +87,8 @@ tasks can be done via the constructor and/or by using the fluent interface.
         # OUT: '2012-12-12 01:00:05.003100'
 
 
-:class:`hiro.Timeline` can additionally be used as a decorator. If the decorated
-function expects has a ``timeline`` argument, the :class:`hiro.Timeline` will be
+:class:`~hiro.Timeline` can additionally be used as a decorator. If the decorated
+function expects a ``timeline`` argument, the :class:`~hiro.Timeline` will be
 passed to it.
 
 .. code-block:: python
@@ -116,21 +116,21 @@ passed to it.
 run_sync and run_async
 ======================
 
-In order to execute certain callables within a :class:`hiro.ScaledTimeline` context, two
+In order to execute certain callables within a :class:`~hiro.Timeline` context, two
 shortcut functions are provided.
 
-* ``run_sync(factor=1, callable, *args, **kwargs)``
-* ``run_async(factor=1, callable, *args, **kwargs)``
+* :meth:`hiro.run_sync`
+* :meth:`hiro.run_async`
 
-Both functions return a :class:`hiro.core.ScaledRunner` object which provides the following methods
+Both functions return a :class:`~hiro.core.ScaledRunner` object which provides the following methods
 
-* ``get_execution_time``: The actual execution time of the ``callable``
-* ``get_response`` (will either return the actual return value of ``callable`` or raise the exception that was thrown)
+* :meth:`~hiro.core.ScaledRunner.get_execution_time`: The actual execution time of the ``callable``
+* :meth:`~hiro.core.ScaledRunner.get_response` (will either return the actual return value of ``callable`` or raise the exception that was thrown)
 
-``run_async`` returns a derived class of :class:`hiro.core.ScaledRunner` that additionally provides the following methods
+:meth:`~hiro.run_async` returns a derived class of :class:`hiro.core.ScaledRunner` that additionally provides the following methods
 
-* ``is_running``: ``True/False`` depending on whether the callable has completed execution
-* ``join``: blocks until the ``callable`` completes execution
+* :meth:`~hiro.core.ScaledAsyncRunner.is_running`: ``True/False`` depending on whether the callable has completed execution
+* :meth:`~hiro.core.ScaledAsyncRunner.join`: blocks until the ``callable`` completes execution
 
 .. code-block:: python
 
