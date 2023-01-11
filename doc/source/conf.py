@@ -13,23 +13,29 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../../'))
-import hiro
+sys.path.insert(0, os.path.abspath("./"))
 
-# -- Theme settings ---------------------------------------------------------
-on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
-if not on_rtd:  # only import and set the theme if we're building docs locally
-    import sphinx_rtd_theme
-    html_theme = 'sphinx_rtd_theme'
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-html_static_path = ['_static']
+import hiro
+from theme_config import *
+
+html_static_path = ["./_static"]
+html_css_files = [
+    "custom.css",
+    "https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;700&family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
+]
 
 # -- Project information -----------------------------------------------------
+
+if ".post0.dev" in hiro.__version__:
+    version, ahead = hiro.__version__.split(".post0.dev")
+else:
+    version = hiro.__version__
 
 project = 'hiro'
 copyright = '2023, Ali-Akber Saifee'
 author = 'Ali-Akber Saifee'
-version = hiro.__version__
-release = hiro.__version__
+version = version
+release = version
 
 
 # -- General configuration ---------------------------------------------------
@@ -38,8 +44,12 @@ release = hiro.__version__
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.intersphinx',
-    'sphinx.ext.todo', 'sphinx.ext.coverage', 'sphinx.ext.viewcode'
+    'sphinx.ext.autodoc',
+    'sphinx.ext.doctest',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.todo',
+    'sphinx.ext.coverage',
+    'sphinx.ext.viewcode'
 ]
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
