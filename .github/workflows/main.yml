@@ -19,10 +19,6 @@ jobs:
           - python-version: "3.11"
             timezone: 'Asia/Hong_Kong'
           - python-version: "3.11"
-            timezone: 'Europe/Paris'
-          - python-version: "3.11"
-            timezone: 'Asia/Hong_Kong'
-          - python-version: "3.11"
             timezone: "Asia/Shanghai"
     steps:
     - uses: actions/checkout@v3
