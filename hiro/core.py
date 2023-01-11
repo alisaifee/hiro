@@ -233,7 +233,6 @@ class Timeline(Decorator):
         any adjustments due to :attr:`factor` or invocations
         of :meth:`freeze`, :meth:`rewind` or :meth:`forward`
         """
-
         if freeze_point is not None:
             return unit * (offset + freeze_point)
         else:
@@ -291,14 +290,18 @@ class Timeline(Decorator):
         patched version of :func:`time.gmtime`
         """
 
-        return self._get_original("time.gmtime")(seconds or self.__time_time())
+        return self._get_original("time.gmtime")(
+            seconds if seconds is not None else self.__time_time()
+        )
 
     def __time_localtime(self, seconds=None):
         """
         patched version of :func:`time.localtime`
         """
 
-        return self._get_original("time.localtime")(seconds or self.__time_time())
+        return self._get_original("time.localtime")(
+            seconds if seconds is not None else self.__time_time()
+        )
 
     def __time_sleep(self, amount):
         """
