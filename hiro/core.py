@@ -27,7 +27,7 @@ class Decorator(object):
             self.__enter__()
             exc = _NO_EXCEPTION
             try:
-                if "timeline" in inspect.getargspec(fn).args:
+                if "timeline" in inspect.signature(fn).parameters:
                     result = fn(*args, timeline=self, **kw)
                 else:
                     result = fn(*args, **kw)
