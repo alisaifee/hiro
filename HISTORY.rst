@@ -3,6 +3,21 @@
 Changelog
 =========
 
+v1.1.0
+------
+Release Date: 2023-01-11
+
+Features:
+  * Patch time.time_ns, time.monotonic, time.monotonic_ns, time.localtime
+
+Bug Fix:
+  * Ensure time.gmtime and time.localtime work with 0 values
+  * Ensure Timeline can be instantiated with start=0 to reflect  time=0
+  * Improve naming of threaded classes/functions
+
+Deprecation:
+  * Deprecated `run_async` in favor of `run_threaded`
+
 v1.0.2
 ------
 Release Date: 2023-01-11
@@ -88,6 +103,7 @@ v0.0.1
 Release Date: 2013-11-30
 
 Initial Release
+
 
 
 
