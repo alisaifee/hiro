@@ -8,7 +8,6 @@ v1.0.1
 Release Date: 2023-01-11
 
 Compatibility:
-
   * Update package classifiers to reflect python version support
 
 v1.0.0
@@ -16,7 +15,6 @@ v1.0.0
 Release Date: 2023-01-10
 
 Compatibility:
-
   * Drop support for python < 3.7
   * Update sources to not need six for compatibility
 
@@ -42,14 +40,13 @@ v0.1.8
 ------
 Release Date: 2015-06-07
 
-  * Add Python 3.x support
+* Add Python 3.x support
 
 v0.1.5
 ------
 Release Date: 2014-04-03
 
 Bug Fix:
-
   * Imports from time weren't being patched.
 
 v0.1.3
