@@ -4,7 +4,7 @@ setup.py for hiro
 """
 __author__ = "Ali-Akber Saifee"
 __email__ = "ali@indydevs.org.com"
-__copyright__ = "Copyright 2013, Ali-Akber Saifee"
+__copyright__ = "Copyright 2023, Ali-Akber Saifee"
 
 from setuptools import setup
 import os
