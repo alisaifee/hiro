@@ -43,7 +43,7 @@ class Decorator:
 
 class Segment:
     """
-    utility class to manager execution result and timings
+    utility class to manage execution result and timings
     for :class:`SyncRunner
     """
 
