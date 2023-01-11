@@ -2,7 +2,6 @@ import datetime
 import time
 
 import pytest
-import six
 
 from hiro.errors import InvalidTypeError
 from hiro.utils import chained, time_in_seconds, timedelta_to_seconds, utc
@@ -21,7 +20,7 @@ def test_days():
 def test_passthrough():
     assert time_in_seconds(1) == 1
 
-    long_instance = long(1) if six.PY2 else 1  # noqa: F821
+    long_instance = 1
     assert time_in_seconds(long_instance) == long_instance
     assert time_in_seconds(1.0) == 1.0
 

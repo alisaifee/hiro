@@ -6,8 +6,6 @@ import time
 from datetime import date as realdate
 from datetime import datetime as realdatetime
 
-import six
-
 
 class DatetimeMeta(abc.ABCMeta):
     """
@@ -31,8 +29,7 @@ class DateMeta(type):
         return isinstance(instance, realdate)
 
 
-@six.add_metaclass(DatetimeMeta)
-class Datetime(realdatetime):
+class Datetime(realdatetime, metaclass=DatetimeMeta):
     """
     used to patch :class:`datetime.datetime` to follow the rules of the
     parent :class:`hiro.Timeline`
@@ -47,8 +44,7 @@ class Datetime(realdatetime):
         return cls.utcfromtimestamp(time.time())
 
 
-@six.add_metaclass(DateMeta)
-class Date(realdate):
+class Date(realdate, metaclass=DateMeta):
     """
     used to patch :class:`datetime.date` to follow the rules of the
     parent :class:`hiro.Timeline`

@@ -6,28 +6,9 @@ import datetime
 import functools
 import time
 
-import six
-
 from .errors import InvalidTypeError
 
-# Python2 doesn't have the UTC tzinfo object. Backport it from Python3.
-if hasattr(datetime, "timezone"):
-    utc = datetime.timezone.utc
-else:
-
-    class UTC(datetime.tzinfo):
-        """UTC"""
-
-        def utcoffset(self, dt):
-            return datetime.timedelta(0)
-
-        def tzname(self, dt):
-            return "UTC"
-
-        def dst(self, dt):
-            return datetime.timedelta(0)
-
-    utc = UTC()
+utc = datetime.timezone.utc
 
 
 def timedelta_to_seconds(delta):
@@ -50,7 +31,7 @@ def time_in_seconds(value):
     Naive datetime objects (without timezone information) are taken in the
     local timezone.
     """
-    if isinstance(value, (float, six.integer_types)):
+    if isinstance(value, (float, int)):
         return value
     elif isinstance(value, datetime.datetime):
         if value.tzinfo is None:

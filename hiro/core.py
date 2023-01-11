@@ -10,7 +10,6 @@ import time
 from functools import wraps
 
 import mock
-from six import reraise
 
 from .errors import SegmentNotComplete, TimeOutofBounds
 from .patches import Date, Datetime
@@ -37,7 +36,7 @@ class Decorator(object):
             catch = self.__exit__(*exc)
 
             if not catch and exc is not _NO_EXCEPTION:
-                reraise(*exc)
+                raise exc[0]
             return result
 
         return inner
@@ -115,7 +114,7 @@ class Segment(object):
             raise SegmentNotComplete
         else:
             if self.__error:
-                reraise(self.__error[0], self.__error[1], self.__error[2])
+                raise self.__error[0]
             return self.__response
 
 
