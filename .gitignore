@@ -18,3 +18,5 @@ build
 htmlcov
 .tool-versions
 *egg-info*
+
+test_ns.py

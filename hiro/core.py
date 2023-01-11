@@ -175,12 +175,18 @@ class Timeline(Decorator):
         self.mock_mappings = {
             "datetime.date": (datetime.date, Date),
             "datetime.datetime": (datetime.datetime, Datetime),
+            "time.monotonic": (time.monotonic, self.__time_monotonic),
+            "time.monotonic_ns": (time.monotonic_ns, self.__time_monotonic_ns),
             "time.time": (time.time, self.__time_time),
+            "time.time_ns": (time.time_ns, self.__time_time_ns),
             "time.sleep": (time.sleep, self.__time_sleep),
             "time.gmtime": (time.gmtime, self.__time_gmtime),
         }
         self.func_mappings = {
             "time": (time.time, self.__time_time),
+            "time_ns": (time.time_ns, self.__time_time_ns),
+            "monotonic": (time.monotonic, self.__time_monotonic),
+            "monotonic_ns": (time.monotonic_ns, self.__time_monotonic_ns),
             "sleep": (time.sleep, self.__time_sleep),
             "gmtime": (time.gmtime, self.__time_gmtime),
         }
@@ -210,7 +216,7 @@ class Timeline(Decorator):
         else:
             return self.class_mappings[fn_or_mod][1]
 
-    def __compute_time(self, freeze_point, offset):
+    def __compute_time(self, freeze_point, offset, original, unit=1, cast_func=float):
         """
         computes the current_time after accounting for
         any adjustments due to :attr:`factor` or invocations
@@ -218,11 +224,12 @@ class Timeline(Decorator):
         """
 
         if freeze_point is not None:
-            return offset + freeze_point
+            return unit * (offset + freeze_point)
         else:
-            delta = self._get_original("time.time")() - self.reference
-
-            return self.reference + (delta * self.factor) + offset
+            delta = self._get_original(original)() - (unit * self.reference)
+            return cast_func(
+                unit * self.reference + (delta * self.factor) + unit * offset
+            )
 
     def __check_out_of_bounds(self, offset=None, freeze_point=None):
         """
@@ -230,18 +237,43 @@ class Timeline(Decorator):
         offset or freeze point would not result in jumping beyond the epoch
         """
         next_time = self.__compute_time(
-            freeze_point or self.freeze_point, offset or self.offset
+            freeze_point or self.freeze_point, offset or self.offset, "time.time"
         )
 
         if next_time < 0:
             raise TimeOutofBounds(next_time)
+
+    def __time_monotonic(self):
+        """
+        patched version of :func:`time.monotonic`
+        """
+
+        return self.__compute_time(self.freeze_point, self.offset, "time.monotonic")
+
+    def __time_monotonic_ns(self):
+        """
+        patched version of :func:`time.monotonic_ns`
+        """
+
+        return self.__compute_time(
+            self.freeze_point, self.offset, "time.monotonic_ns", 1e9, int
+        )
 
     def __time_time(self):
         """
         patched version of :func:`time.time`
         """
 
-        return self.__compute_time(self.freeze_point, self.offset)
+        return self.__compute_time(self.freeze_point, self.offset, "time.time")
+
+    def __time_time_ns(self):
+        """
+        patched version of :func:`time.time_ns`
+        """
+
+        return self.__compute_time(
+            self.freeze_point, self.offset, "time.time_ns", 1e9, int
+        )
 
     def __time_gmtime(self, seconds=None):
         """
@@ -517,6 +549,7 @@ def run_async(factor, func, *args, **kwargs):
        Use :meth:`run_threaded`
 
     """
+
     return run_threaded(factor, func, *args, **kwargs)
 
 

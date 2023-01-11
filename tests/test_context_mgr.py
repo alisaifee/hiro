@@ -109,6 +109,9 @@ def test_freeze_target():
     with Timeline() as timeline:
         timeline.freeze(0)
         assert round(abs(time.time() - 0), 1) == 0
+        assert round(abs(time.time_ns() - 0), 1) == 0
+        assert round(abs(time.monotonic() - 0), 1) == 0
+        assert round(abs(time.monotonic_ns() - 0), 1) == 0
 
     with Timeline() as timeline:
         with pytest.raises(TypeError):
