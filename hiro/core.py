@@ -178,7 +178,9 @@ class Timeline(Decorator):
 
     def __init__(self, scale=1, start=None):
         self.reference = time.time()
-        self.offset = time_in_seconds(start) - self.reference if start else 0.0
+        self.offset = (
+            time_in_seconds(start) - self.reference if start is not None else 0.0
+        )
         self.freeze_point = self.freeze_at = None
         self.patchers = []
         self.mock_mappings = {
