@@ -2,8 +2,8 @@ import math
 import os
 import time
 from datetime import date, datetime, timedelta
+from unittest import mock
 
-import mock
 import pytest
 
 from hiro import Timeline

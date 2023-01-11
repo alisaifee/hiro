@@ -48,8 +48,8 @@ def test_invalid_type():
         time_in_seconds("this is a string")
 
 
-class TestChained(object):
-    class Foo(object):
+class TestChained:
+    class Foo:
         @chained
         def return_value(self, value=None):
             return value

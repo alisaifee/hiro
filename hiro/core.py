@@ -8,8 +8,7 @@ import sys
 import threading
 import time
 from functools import wraps
-
-import mock
+from unittest import mock
 
 from .errors import SegmentNotComplete, TimeOutofBounds
 from .patches import Date, Datetime
@@ -19,7 +18,7 @@ BLACKLIST = set()
 _NO_EXCEPTION = (None, None, None)
 
 
-class Decorator(object):
+class Decorator:
     def __call__(self, fn):
         @wraps(fn)
         def inner(*args, **kw):
@@ -42,7 +41,7 @@ class Decorator(object):
         return inner
 
 
-class Segment(object):
+class Segment:
     """
     utility class to manager execution result and timings
     for :class:`SyncRunner
@@ -351,7 +350,7 @@ class Timeline(Decorator):
                     if obj in dir(module) and getattr(
                         module, obj
                     ) == self._get_original(obj):
-                        path = "%s.%s" % (name, obj)
+                        path = "{}.{}".format(name, obj)
                         if path not in self.mock_mappings:
                             patcher = mock.patch(path, self._get_fake(obj))
                             patcher.start()
@@ -374,7 +373,7 @@ class Timeline(Decorator):
         self.patchers = []
 
 
-class ScaledRunner(object):
+class ScaledRunner:
     """
     manages the execution of a callable within a :class:`hiro.Timeline`
     context.
@@ -427,7 +426,7 @@ class ScaledAsyncRunner(ScaledRunner):
 
     def __init__(self, *args, **kwargs):
         self.thread_runner = threading.Thread(target=self._run)
-        super(ScaledAsyncRunner, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def __call__(self):
         self.thread_runner.start()
