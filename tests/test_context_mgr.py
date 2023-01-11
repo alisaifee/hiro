@@ -232,8 +232,8 @@ def test_decorated_exception():
         _decorated()
 
 
-@mock.patch("hiro.core.BLACKLIST", new_callable=set)
-def test_patch_blacklist(BLACKLIST):
+@mock.patch("hiro.core.IGNORED_MODULES", new_callable=set)
+def test_patch_ignored_modules(IGNORED_MODULES):
     hiro_dummy_module = mock.MagicMock(__dir__=mock.MagicMock(side_effect=Exception))
 
     with mock.patch.dict("sys.modules", {"hiro_dummy_module": hiro_dummy_module}):
@@ -244,4 +244,4 @@ def test_patch_blacklist(BLACKLIST):
             pass
 
         hiro_dummy_module.__dir__.assert_called_once()
-        assert hiro_dummy_module in BLACKLIST
+        assert hiro_dummy_module in IGNORED_MODULES

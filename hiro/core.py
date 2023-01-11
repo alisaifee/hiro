@@ -14,7 +14,7 @@ from .errors import SegmentNotComplete, TimeOutofBounds
 from .patches import Date, Datetime
 from .utils import chained, time_in_seconds, timedelta_to_seconds
 
-BLACKLIST = set()
+IGNORED_MODULES = set()
 _NO_EXCEPTION = (None, None, None)
 
 
@@ -358,7 +358,7 @@ class Timeline(Decorator):
         for name in list(sys.modules.keys()):
             module = sys.modules[name]
 
-            if module in BLACKLIST:
+            if module in IGNORED_MODULES:
                 continue
             mappings = copy.copy(self.class_mappings)
             mappings.update(self.func_mappings)
@@ -377,7 +377,7 @@ class Timeline(Decorator):
             # this is done for cases where invalid modules are on
             # sys modules.
             except:  # noqa: E722
-                BLACKLIST.add(module)
+                IGNORED_MODULES.add(module)
 
         for time_obj in self.mock_mappings:
             patcher = mock.patch(time_obj, self._get_fake(time_obj))
