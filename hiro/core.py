@@ -134,6 +134,7 @@ class Timeline(Decorator):
     - :func:`time.monotonic`
     - :func:`time.monotonic_ns`
     - :func:`time.sleep`
+    - :func:`time.localtime`
     - :func:`time.gmtime`
     - :meth:`datetime.datetime.now`
     - :meth:`datetime.date.today`
@@ -189,6 +190,7 @@ class Timeline(Decorator):
             "time.time_ns": (time.time_ns, self.__time_time_ns),
             "time.sleep": (time.sleep, self.__time_sleep),
             "time.gmtime": (time.gmtime, self.__time_gmtime),
+            "time.localtime": (time.localtime, self.__time_localtime),
         }
         self.func_mappings = {
             "time": (time.time, self.__time_time),
@@ -197,6 +199,7 @@ class Timeline(Decorator):
             "monotonic_ns": (time.monotonic_ns, self.__time_monotonic_ns),
             "sleep": (time.sleep, self.__time_sleep),
             "gmtime": (time.gmtime, self.__time_gmtime),
+            "localtime": (time.localtime, self.__time_localtime),
         }
         self.factor = scale
 
@@ -289,6 +292,13 @@ class Timeline(Decorator):
         """
 
         return self._get_original("time.gmtime")(seconds or self.__time_time())
+
+    def __time_localtime(self, seconds=None):
+        """
+        patched version of :func:`time.localtime`
+        """
+
+        return self._get_original("time.localtime")(seconds or self.__time_time())
 
     def __time_sleep(self, amount):
         """
