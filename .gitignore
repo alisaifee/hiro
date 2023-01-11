@@ -16,4 +16,5 @@ build
 .python-version
 .idea
 htmlcov
+.tool-versions
 *egg-info*
