@@ -32,3 +32,9 @@ jobs:
       run: |
         flake8 . --count --show-source --statistics
         flake8 . --count --exit-zero --max-complexity=10
+    - name: Lint with black
+      run: |
+        black hiro tests --check
+    - name: Check imports
+      run: |
+        isort -c --profile=black hiro tests
