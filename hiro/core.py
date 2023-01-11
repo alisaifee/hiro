@@ -126,10 +126,18 @@ class Segment:
 class Timeline(Decorator):
     """
     Timeline context manager. Within this context
-    the builtins :func:`time.time`, :func:`time.sleep`,
-    :meth:`datetime.datetime.now`, :meth:`datetime.date.today`,
-    :meth:`datetime.datetime.utcnow` and :func:`time.gmtime`
-    respect the alterations made to the timeline.
+    the following builtins respect the alterations made
+    to the timeline:
+
+    - :func:`time.time`
+    - :func:`time.time_ns`
+    - :func:`time.monotonic`
+    - :func:`time.monotonic_ns`
+    - :func:`time.sleep`
+    - :func:`time.gmtime`
+    - :meth:`datetime.datetime.now`
+    - :meth:`datetime.date.today`
+    - :meth:`datetime.datetime.utcnow`
 
     The class can be used either as a context manager or a decorator.
 
